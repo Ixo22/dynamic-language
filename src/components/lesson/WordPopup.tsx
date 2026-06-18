@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { VocabItem } from '@/lib/types'
 
 interface Props {
@@ -48,13 +49,16 @@ function AudioBtn({ forma }: { forma: string }) {
 export function WordPopup({ vocab, onClose, showAudio }: Props) {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
-  /* ── MÓVIL: bottom sheet con backdrop ── */
+  /* ── MÓVIL: portal en document.body — escapa overflow-y:auto del shell ── */
   if (isMobile) {
-    return (
+    return createPortal(
       <>
         {/* Backdrop */}
         <div
-          style={{ position: 'fixed', inset: 0, zIndex: 190, background: 'rgba(0,0,0,0.55)' }}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9998,
+            background: 'rgba(0,0,0,0.55)',
+          }}
           onClick={e => { e.stopPropagation(); onClose() }}
         />
 
@@ -62,46 +66,58 @@ export function WordPopup({ vocab, onClose, showAudio }: Props) {
         <div
           className="slide-up-in"
           style={{
-            position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 191,
+            position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999,
             background: 'var(--surface)',
-            borderTop: '1px solid var(--amber)',
+            borderTop: '2px solid var(--amber)',
             borderRadius: '16px 16px 0 0',
-            boxShadow: '0 -8px 40px rgba(0,0,0,0.6)',
-            paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+            boxShadow: '0 -8px 48px rgba(0,0,0,0.7)',
+            paddingBottom: 'env(safe-area-inset-bottom, 8px)',
           }}
           onClick={e => e.stopPropagation()}
         >
-          {/* Drag handle */}
-          <div className="flex justify-center pt-3 pb-1">
-            <div style={{ width: 36, height: 4, borderRadius: 2, background: 'var(--border)' }} />
+          {/* Handle */}
+          <div className="flex justify-center pt-3 pb-2">
+            <div style={{ width: 40, height: 4, borderRadius: 2, background: 'var(--border)' }} />
           </div>
 
           {/* Cabecera */}
-          <div className="flex items-center justify-between px-5 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
+          <div
+            className="flex items-center justify-between px-5 py-3"
+            style={{ borderBottom: '1px solid var(--border)' }}
+          >
             <div>
-              <p className="jp font-black leading-none" style={{ fontSize: '2.2rem', color: 'var(--amber)' }}>{vocab.forma}</p>
-              <p className="jp text-sm mt-1 tracking-widest" style={{ color: 'var(--muted)' }}>{vocab.lectura}</p>
+              <p className="jp font-black" style={{ fontSize: '2.4rem', lineHeight: 1, color: 'var(--amber)' }}>
+                {vocab.forma}
+              </p>
+              <p className="jp text-sm mt-1.5 tracking-widest" style={{ color: 'var(--muted)' }}>
+                {vocab.lectura}
+              </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               {showAudio && <AudioBtn forma={vocab.forma} />}
               <button
                 onClick={e => { e.stopPropagation(); onClose() }}
                 className="w-9 h-9 flex items-center justify-center rounded-full"
-                style={{ border: '1px solid var(--border)', color: 'var(--muted)', fontSize: 16 }}
-              >✕</button>
+                style={{ border: '1px solid var(--border)', color: 'var(--muted)', fontSize: 18 }}
+              >
+                ✕
+              </button>
             </div>
           </div>
 
           {/* Significado */}
           <div className="px-5 py-4">
-            <p className="text-base leading-relaxed" style={{ color: 'var(--text)' }}>{vocab.significado}</p>
+            <p className="text-base leading-relaxed" style={{ color: 'var(--text)' }}>
+              {vocab.significado}
+            </p>
           </div>
         </div>
-      </>
+      </>,
+      document.body
     )
   }
 
-  /* ── DESKTOP: tooltip encima de la palabra ── */
+  /* ── DESKTOP: tooltip absolute encima de la palabra ── */
   return (
     <div
       className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 w-56 pointer-events-none"
@@ -127,7 +143,6 @@ export function WordPopup({ vocab, onClose, showAudio }: Props) {
           <p className="text-sm leading-snug" style={{ color: 'var(--text)' }}>{vocab.significado}</p>
         </div>
       </div>
-      {/* Flecha */}
       <div className="flex justify-center mt-px pointer-events-none">
         <div className="w-0 h-0" style={{
           borderLeft:  '5px solid transparent',
