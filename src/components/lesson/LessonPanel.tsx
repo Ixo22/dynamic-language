@@ -254,9 +254,9 @@ export function LessonPanel() {
         </div>
       </div>
 
-      {/* ─── ToggleBar sticky — solo en lección, vive fuera del scroll ─── */}
+      {/* ─── ToggleBar sticky móvil — fuera del scroll, oculto en desktop ─── */}
       {tab === 'lesson' && (
-        <div style={{ flexShrink: 0, background: 'var(--bg)', borderBottom: '1px solid var(--border)' }}>
+        <div className="md:hidden" style={{ flexShrink: 0, background: 'var(--bg)', borderBottom: '1px solid var(--border)' }}>
           <ToggleBar toggles={toggles} onChange={handleToggle} />
         </div>
       )}
@@ -267,6 +267,10 @@ export function LessonPanel() {
 
           {tab === 'lesson' && (
             <div key="lesson" className="flex flex-col fade-up">
+              {/* ToggleBar en desktop — dentro del scroll, comportamiento original */}
+              <div className="hidden md:block" style={{ borderBottom: '1px solid var(--border)' }}>
+                <ToggleBar toggles={toggles} onChange={handleToggle} />
+              </div>
 
               {loading && (
                 <div className="flex flex-col items-center justify-center gap-5 py-32">
