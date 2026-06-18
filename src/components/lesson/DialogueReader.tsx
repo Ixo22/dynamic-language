@@ -71,7 +71,8 @@ function tokenize(phrase: string, vocab: VocabItem[]): Token[] {
 }
 
 export function DialogueReader({ dialogue, showHints, showText, showAudio }: Props) {
-  const [activeIdx, setActiveIdx] = useState<number | null>(null)
+  const [activeIdx, setActiveIdx]     = useState<number | null>(null)
+  const [revealedSet, setRevealedSet] = useState<Set<string>>(new Set())
   const tokens      = tokenize(dialogue.frase_completa_jp, dialogue.vocabulario_desglosado)
   const ambientChar = dialogue.frase_completa_jp[0] ?? '語'
 
@@ -81,6 +82,16 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
     document.addEventListener('click', close)
     return () => document.removeEventListener('click', close)
   }, [activeIdx])
+
+  useEffect(() => { setRevealedSet(new Set()) }, [dialogue])
+
+  function toggleReveal(forma: string) {
+    setRevealedSet(prev => {
+      const next = new Set(prev)
+      next.has(forma) ? next.delete(forma) : next.add(forma)
+      return next
+    })
+  }
 
   return (
     <div>
@@ -133,7 +144,7 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
         </div>
       )}
 
-      {/* ── Vocabulario — tarjetas ── */}
+      {/* ── Vocabulario — flashcards con recall activo ── */}
       {dialogue.vocabulario_desglosado.length > 0 && (
         <div className="mb-1">
           <div className="flex items-center justify-between py-3" style={{ borderTop: '1px solid var(--border)' }}>
@@ -143,19 +154,15 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
           {dialogue.vocabulario_desglosado.map((v, i) => {
             const idx      = tokens.findIndex(t => t.vocab?.forma === v.forma)
             const isActive = activeIdx === idx
+            const isShown  = revealedSet.has(v.forma)
+
             return (
-              <button
-                key={i}
-                onClick={(e) => { e.stopPropagation(); setActiveIdx(isActive ? null : idx) }}
-                className="vocab-card w-full text-left mb-2 relative overflow-hidden"
-                style={{
-                  background: isActive ? 'rgba(196,125,23,0.06)' : 'var(--surface)',
-                  border: '1px solid var(--border)',
-                  borderLeft: `3px solid ${isActive ? 'var(--amber-l)' : 'var(--amber)'}`,
-                  borderRadius: 3,
-                  padding: '14px 48px 14px 16px',
-                }}
-              >
+              <div key={i} className="vocab-card mb-2 overflow-hidden" style={{
+                background: isActive ? 'rgba(196,125,23,0.04)' : 'var(--surface)',
+                border: '1px solid var(--border)',
+                borderLeft: `3px solid ${isActive ? 'var(--amber-l)' : 'var(--amber)'}`,
+                borderRadius: 3,
+              }}>
                 <span aria-hidden style={{
                   position: 'absolute', right: -4, top: '50%', transform: 'translateY(-50%)',
                   fontSize: '5rem', fontWeight: 900, fontFamily: 'var(--font-latin)',
@@ -164,17 +171,39 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
                 }}>
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 min-w-0">
+
+                {/* Zona superior — enlaza con la frase */}
+                <button
+                  onClick={(e) => { e.stopPropagation(); setActiveIdx(isActive ? null : idx) }}
+                  className="w-full flex items-center justify-between gap-3 px-4 pt-3 pb-3 text-left"
+                  style={{ borderBottom: '1px solid var(--border)' }}
+                >
+                  <div className="min-w-0">
                     <p className="text-[8px] tracking-[0.2em] mb-1" style={{ color: 'var(--muted)' }}>{v.lectura}</p>
-                    <p className="jp font-bold text-xl leading-none mb-2" style={{ color: isActive ? 'var(--amber-l)' : 'var(--amber)' }}>{v.forma}</p>
-                    <p className="text-sm leading-snug" style={{ color: 'var(--text)', opacity: 0.85 }}>{v.significado}</p>
+                    <p className="jp font-bold text-xl leading-none" style={{ color: isActive ? 'var(--amber-l)' : 'var(--amber)' }}>{v.forma}</p>
                   </div>
-                  <div onClick={(e) => e.stopPropagation()} className="shrink-0 self-center">
+                  <div onClick={(e) => e.stopPropagation()} className="shrink-0">
                     <VocabAudioBtn forma={v.forma} visible={showAudio} />
                   </div>
-                </div>
-              </button>
+                </button>
+
+                {/* Zona inferior — reveal del significado */}
+                {isShown ? (
+                  <div className="px-4 py-3">
+                    <p className="text-sm leading-snug" style={{ color: 'var(--text)', opacity: 0.9 }}>{v.significado}</p>
+                  </div>
+                ) : (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); toggleReveal(v.forma) }}
+                    className="w-full flex items-center justify-between px-4 py-3 transition-all group"
+                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(196,125,23,0.04)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    <span className="text-[10px] tracking-widest" style={{ color: 'var(--muted)', opacity: 0.55 }}>¿Lo recuerdas?</span>
+                    <span className="text-[10px] tracking-widest transition-colors group-hover:text-[#c47d17]" style={{ color: 'var(--muted)', opacity: 0.55 }}>Ver significado →</span>
+                  </button>
+                )}
+              </div>
             )
           })}
         </div>
