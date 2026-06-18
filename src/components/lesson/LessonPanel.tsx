@@ -254,15 +254,19 @@ export function LessonPanel() {
         </div>
       </div>
 
+      {/* ─── ToggleBar sticky — solo en lección, vive fuera del scroll ─── */}
+      {tab === 'lesson' && (
+        <div style={{ flexShrink: 0, background: 'var(--bg)', borderBottom: '1px solid var(--border)' }}>
+          <ToggleBar toggles={toggles} onChange={handleToggle} />
+        </div>
+      )}
+
       {/* ─── Área de scroll — todo el contenido aquí abajo ─── */}
       <div style={{ flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
         <main className="max-w-lg md:max-w-2xl mx-auto w-full pb-6">
 
           {tab === 'lesson' && (
             <div key="lesson" className="flex flex-col fade-up">
-              <div style={{ borderBottom: '1px solid var(--border)' }}>
-                <ToggleBar toggles={toggles} onChange={handleToggle} />
-              </div>
 
               {loading && (
                 <div className="flex flex-col items-center justify-center gap-5 py-32">
