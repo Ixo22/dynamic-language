@@ -138,6 +138,19 @@ body::after {
 .srs-no:hover  .srs-label { color: var(--red)   !important; opacity: 1 !important; }
 .srs-yes:hover .srs-label { color: var(--amber) !important; opacity: 1 !important; }
 
+/* ToggleBar: sticky solo en móvil */
+.togglebar-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+}
+@media (min-width: 768px) {
+  .togglebar-sticky {
+    position: static;
+  }
+}
+
 /* Desktop: prevent unreadable micro-text */
 @media (min-width: 768px) {
   p, span, button, label { font-size: max(var(--fs-override, 0px), inherit); }
