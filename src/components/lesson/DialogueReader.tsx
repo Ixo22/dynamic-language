@@ -157,30 +157,28 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
             const isShown  = revealedSet.has(v.forma)
 
             return (
-              <div key={i} className="vocab-card relative overflow-hidden mb-2" style={{
+              <div key={i} className="vocab-card mb-2" style={{
                 background: isActive ? 'rgba(196,125,23,0.04)' : 'var(--surface)',
                 border: '1px solid var(--border)',
                 borderLeft: `3px solid ${isActive ? 'var(--amber-l)' : 'var(--amber)'}`,
                 borderRadius: 3,
               }}>
-                <span aria-hidden className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none select-none" style={{
-                  fontSize: '4.5rem', fontWeight: 900, fontFamily: 'var(--font-latin)',
-                  color: 'var(--amber)', opacity: 0.06, lineHeight: 1,
-                  letterSpacing: '-0.04em',
-                }}>
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-
                 {/* Zona superior — enlaza con la frase */}
                 <button
                   onClick={(e) => { e.stopPropagation(); setActiveIdx(isActive ? null : idx) }}
-                  className="w-full flex items-center justify-between gap-3 px-4 pt-3 pb-3 text-left"
+                  className="w-full flex items-center gap-3 px-4 pt-3 pb-3 text-left"
                   style={{ borderBottom: '1px solid var(--border)' }}
                 >
-                  <div className="min-w-0">
+                  <div className="flex-1 min-w-0">
                     <p className="text-[8px] tracking-[0.2em] mb-1" style={{ color: 'var(--muted)' }}>{v.lectura}</p>
                     <p className="jp font-bold text-xl leading-none" style={{ color: isActive ? 'var(--amber-l)' : 'var(--amber)' }}>{v.forma}</p>
                   </div>
+                  <span aria-hidden className="shrink-0 select-none" style={{
+                    fontSize: '2.8rem', fontWeight: 900, lineHeight: 1,
+                    color: 'var(--amber)', opacity: 0.08, letterSpacing: '-0.04em',
+                  }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
                   <div onClick={(e) => e.stopPropagation()} className="shrink-0">
                     <VocabAudioBtn forma={v.forma} visible={showAudio} />
                   </div>
