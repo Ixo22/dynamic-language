@@ -17,7 +17,7 @@ const latin = Space_Grotesk({
 })
 
 export const metadata: Metadata = {
-  title: '動的言語 — Japonés real',
+  title: 'Dynamic Language',
   description: 'Aprende japonés con input comprensible y repetición espaciada',
 }
 

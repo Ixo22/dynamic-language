@@ -54,7 +54,6 @@ function PhraseCard({ dialogue, index, showHints }: {
         borderRadius: 4,
         marginBottom: 12,
         animationDelay: `${index * 80}ms`,
-        overflow: 'hidden',
       }}
     >
       {/* Contexto */}
