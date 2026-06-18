@@ -86,7 +86,7 @@ export function LessonPanel() {
       {/* ─── Cabecera ─── */}
       <header className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 flex items-center justify-center jp font-black text-[11px] shrink-0 select-none" style={{ background: 'var(--red)', color: '#f5ede0', borderRadius: 3 }}>語</div>
+          <div className="w-7 h-7 flex items-center justify-center jp font-black text-[11px] shrink-0 select-none sway" style={{ background: 'var(--red)', color: '#f5ede0', borderRadius: 3 }}>語</div>
           <div>
             <h1 className="jp font-bold text-base leading-none" style={{ color: 'var(--text)' }}>動的言語</h1>
             <p className="text-[9px] tracking-[0.12em] uppercase mt-0.5" style={{ color: 'var(--muted)' }}>Japonés real</p>
@@ -114,7 +114,7 @@ export function LessonPanel() {
 
       <main className="flex-1 flex flex-col max-w-lg mx-auto w-full">
         {tab === 'lesson' && (
-          <div className="flex flex-col flex-1">
+          <div key="lesson" className="flex flex-col flex-1 fade-up">
             <div style={{ borderBottom: '1px solid var(--border)' }}>
               <ToggleBar toggles={toggles} onChange={handleToggle} />
             </div>
@@ -129,7 +129,7 @@ export function LessonPanel() {
 
               {dialogue && !loading && (
                 <div className="fade-up">
-                  <div className="px-5 pt-6 flex items-center gap-3">
+                  <div className="px-5 pt-6 flex items-center gap-3 slide-right">
                     <span className="shrink-0 text-[9px] tracking-[0.25em] uppercase font-semibold px-2 py-0.5" style={{ color: 'var(--bg)', background: 'var(--muted)', borderRadius: 2 }}>
                       {level} · {LEVEL_LABELS[level]}
                     </span>
@@ -185,7 +185,7 @@ export function LessonPanel() {
 
             <button
               onClick={fetchDialogue} disabled={loading}
-              className="group flex items-center justify-between w-full px-5 py-4 transition-colors"
+              className="group flex items-center justify-between w-full px-5 py-4 transition-colors border-pulse"
               style={{ borderTop: '1px solid var(--border)', color: 'var(--muted)' }}
               onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
@@ -197,7 +197,7 @@ export function LessonPanel() {
         )}
 
         {tab === 'stroke' && (
-          <div className="p-5">
+          <div key="stroke" className="p-5 fade-up">
             <div className="p-5" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 4 }}>
               <StrokeAnimator />
             </div>

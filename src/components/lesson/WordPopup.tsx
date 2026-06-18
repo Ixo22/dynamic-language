@@ -32,7 +32,7 @@ export function WordPopup({ vocab, onClose, showAudio }: Props) {
   return (
     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 w-48 pointer-events-none">
       <div
-        className="overflow-hidden pointer-events-auto"
+        className="overflow-hidden pointer-events-auto scale-in"
         style={{ background: 'var(--surface)', border: '1px solid var(--amber)', borderRadius: 4, boxShadow: '0 8px 32px rgba(0,0,0,0.65)' }}
       >
         <div className="px-4 py-3 flex items-center justify-between gap-3" style={{ borderBottom: '1px solid var(--border)' }}>

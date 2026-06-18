@@ -63,7 +63,7 @@ export function KanaOverlay() {
       {/* Panel */}
       {open && (
         <div
-          className="w-72 overflow-hidden shadow-2xl"
+          className="w-72 overflow-hidden shadow-2xl slide-down"
           style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 4 }}
         >
           <div className="flex" style={{ borderBottom: '1px solid var(--border)' }}>

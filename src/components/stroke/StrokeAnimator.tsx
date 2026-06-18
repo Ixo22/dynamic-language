@@ -265,7 +265,7 @@ export function StrokeAnimator() {
             {chars.map((cs, i) => {
               const interactive = cs.svgContent !== null || !hasStrokeData(cs.char)
               return (
-                <div key={i} className="flex flex-col items-center gap-2">
+                <div key={i} className="flex flex-col items-center gap-2 pop-in" style={{ animationDelay: `${i * 70}ms` }}>
                   <div
                     className="w-[120px] h-[120px] flex items-center justify-center overflow-hidden transition-all"
                     style={{

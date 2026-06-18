@@ -102,9 +102,9 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
           <span className="jp font-black leading-none" style={{ fontSize: 'clamp(14rem, 55vw, 22rem)', color: 'var(--text)' }}>{ambientChar}</span>
         </div>
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 50% at center, rgba(196,125,23,0.05) 0%, transparent 68%)' }} />
-        <div className="relative flex flex-wrap gap-x-1 gap-y-6 justify-center items-end py-14">
+        <div key={dialogue.frase_completa_jp} className="relative flex flex-wrap gap-x-1 gap-y-6 justify-center items-end py-14">
           {tokens.map((token, i) => (
-            <div key={i} className="relative flex flex-col items-center" style={{ gap: token.isVocab ? 4 : 0 }}>
+            <div key={i} className="relative flex flex-col items-center pop-in" style={{ gap: token.isVocab ? 4 : 0, animationDelay: `${i * 35}ms` }}>
               {showHints && token.vocab && (
                 <span className="jp text-[11px] leading-none tracking-wide" style={{ color: 'var(--amber)', opacity: 0.65 }}>{token.vocab.lectura}</span>
               )}
@@ -164,11 +164,12 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
             const isShown  = revealedSet.has(v.forma)
 
             return (
-              <div key={i} className="vocab-card mb-2" style={{
+              <div key={i} className="vocab-card pop-in mb-2" style={{
                 background: isActive ? 'rgba(196,125,23,0.04)' : 'var(--surface)',
                 border: '1px solid var(--border)',
                 borderLeft: `3px solid ${isActive ? 'var(--amber-l)' : 'var(--amber)'}`,
                 borderRadius: 3,
+                animationDelay: `${i * 55}ms`,
               }}>
                 {/* Zona superior — enlaza con la frase */}
                 <button
@@ -193,7 +194,7 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
 
                 {/* Zona inferior — reveal del significado */}
                 {isShown ? (
-                  <div className="px-4 py-3">
+                  <div className="px-4 py-3 slide-down">
                     <p className="text-sm leading-snug" style={{ color: 'var(--text)', opacity: 0.9 }}>{v.significado}</p>
                   </div>
                 ) : (
