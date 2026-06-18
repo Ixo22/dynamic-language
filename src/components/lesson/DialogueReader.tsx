@@ -173,7 +173,7 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
             const isShown  = revealedSet.has(v.forma)
 
             return (
-              <div key={i} className="vocab-card pop-in mb-2" style={{
+              <div key={v.forma} className="vocab-card pop-in mb-2" style={{
                 background: isActive ? 'rgba(196,125,23,0.04)' : 'var(--surface)',
                 border: '1px solid var(--border)',
                 borderLeft: `3px solid ${isActive ? 'var(--amber-l)' : 'var(--amber)'}`,

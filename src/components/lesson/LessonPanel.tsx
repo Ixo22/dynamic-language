@@ -180,7 +180,7 @@ export function LessonPanel() {
       </div>
 
       {/* ─── Navbar fixed ─── */}
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, background: 'var(--bg)', borderBottom: '1px solid var(--border)' }}>
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100, background: '#0d0b08', borderBottom: '1px solid var(--border)', transform: 'translateZ(0)' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
 
           {/* Logo */}
@@ -243,7 +243,7 @@ export function LessonPanel() {
       </div>
 
       {/* ─── Contenido ─── */}
-      <main className="flex-1 flex flex-col max-w-lg mx-auto w-full" style={{ paddingTop: 56, position: 'relative', zIndex: 0, isolation: 'isolate' }}>
+      <main className="flex-1 flex flex-col max-w-lg md:max-w-2xl mx-auto w-full" style={{ paddingTop: 56, position: 'relative', zIndex: 0, isolation: 'isolate' }}>
 
         {tab === 'lesson' && (
           <div key="lesson" className="flex flex-col flex-1 fade-up">

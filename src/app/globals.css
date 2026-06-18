@@ -137,3 +137,12 @@ body::after {
 /* Botones SRS */
 .srs-no:hover  .srs-label { color: var(--red)   !important; opacity: 1 !important; }
 .srs-yes:hover .srs-label { color: var(--amber) !important; opacity: 1 !important; }
+
+/* Desktop: prevent unreadable micro-text */
+@media (min-width: 768px) {
+  p, span, button, label { font-size: max(var(--fs-override, 0px), inherit); }
+  .text-\[8px\]  { font-size: 11px !important; }
+  .text-\[9px\]  { font-size: 12px !important; }
+  .text-\[10px\] { font-size: 13px !important; }
+  .text-\[11px\] { font-size: 13px !important; }
+}
