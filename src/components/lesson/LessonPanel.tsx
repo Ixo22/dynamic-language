@@ -5,7 +5,6 @@ import { DialogueResponse, UIToggles, JLPTLevel } from '@/lib/types'
 import { ToggleBar } from './ToggleBar'
 import { DialogueReader } from './DialogueReader'
 import { SRSButtons } from './SRSButtons'
-import { AudioPlayer } from './AudioPlayer'
 import { InputPractice } from './InputPractice'
 import { StrokeAnimator } from '@/components/stroke/StrokeAnimator'
 
@@ -154,12 +153,6 @@ export function LessonPanel() {
                       showAudio={toggles.showAudio}
                     />
                   </div>
-
-                  {toggles.showAudio && (
-                    <div className="px-5 py-4" style={{ borderTop: '1px solid var(--border)' }}>
-                      <AudioPlayer text={dialogue.frase_completa_jp} />
-                    </div>
-                  )}
 
                   {/* Botón de revelación (solo en modo solo-audio) */}
                   {audioOnlyMode && !revealed && (

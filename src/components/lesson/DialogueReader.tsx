@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { DialogueResponse, Token, VocabItem } from '@/lib/types'
 import { WordPopup } from './WordPopup'
+import { AudioPlayer } from './AudioPlayer'
 
 interface Props {
   dialogue:  DialogueResponse
@@ -134,6 +135,12 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
             </div>
           ))}
         </div>
+        {/* ── Audio pegado a la frase ── */}
+        {showAudio && (
+          <div className="relative flex justify-center pb-4">
+            <AudioPlayer text={dialogue.frase_completa_jp} />
+          </div>
+        )}
       </div>
 
       {/* ── Traducción ── */}
