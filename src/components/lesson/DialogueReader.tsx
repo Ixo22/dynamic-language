@@ -37,14 +37,14 @@ function VocabAudioBtn({ forma, visible }: { forma: string; visible: boolean }) 
   return (
     <button
       onClick={handle}
-      className="shrink-0 w-7 h-7 flex items-center justify-center rounded-full transition-colors ml-auto"
+      className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full transition-all"
       style={{
         border: '1px solid', borderColor: playing ? 'var(--amber)' : 'var(--border)',
-        background: playing ? 'rgba(196,125,23,0.15)' : 'transparent',
+        background: playing ? 'rgba(196,125,23,0.18)' : 'rgba(255,255,255,0.02)',
         color: playing ? 'var(--amber)' : 'var(--muted)',
       }}
     >
-      {playing ? <span className="w-1.5 h-1.5 rounded-sm" style={{ background: 'var(--amber)' }} /> : <span style={{ fontSize: 9, marginLeft: 1 }}>▶</span>}
+      {playing ? <span className="block w-[7px] h-[7px] rounded-sm" style={{ background: 'var(--amber)' }} /> : <span style={{ fontSize: 9, marginLeft: 2 }}>▶</span>}
     </button>
   )
 }
@@ -89,34 +89,31 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none breathe" aria-hidden>
           <span className="jp font-black leading-none" style={{ fontSize: 'clamp(14rem, 55vw, 22rem)', color: 'var(--text)' }}>{ambientChar}</span>
         </div>
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 50% at center, rgba(196,125,23,0.04) 0%, transparent 70%)' }} />
-        <div className="relative flex flex-wrap gap-x-1 gap-y-4 justify-center items-end py-12">
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 50% at center, rgba(196,125,23,0.05) 0%, transparent 68%)' }} />
+        <div className="relative flex flex-wrap gap-x-1 gap-y-6 justify-center items-end py-14">
           {tokens.map((token, i) => (
-            <div key={i} className="relative flex flex-col items-center gap-0.5">
+            <div key={i} className="relative flex flex-col items-center" style={{ gap: token.isVocab ? 4 : 0 }}>
               {showHints && token.vocab && (
-                <span className="jp text-[11px] leading-none tracking-wide" style={{ color: 'var(--amber)', opacity: 0.65 }}>
-                  {token.vocab.lectura}
-                </span>
+                <span className="jp text-[11px] leading-none tracking-wide" style={{ color: 'var(--amber)', opacity: 0.65 }}>{token.vocab.lectura}</span>
               )}
               <button
                 onClick={(e) => { if (!token.isVocab) return; e.stopPropagation(); setActiveIdx(activeIdx === i ? null : i) }}
-                className="jp leading-none transition-all duration-100"
+                className={`jp leading-none ${token.isVocab ? 'token-btn' : ''}`}
                 style={{
                   fontSize: 'clamp(2.8rem, 10vw, 5rem)',
                   color: activeIdx === i ? 'var(--amber)' : 'var(--text)',
-                  opacity: token.isVocab ? 1 : 0.55,
+                  opacity: token.isVocab ? 1 : 0.45,
                   cursor: token.isVocab ? 'pointer' : 'default',
                   fontWeight: token.isVocab ? 700 : 400,
                   textDecorationLine: token.isVocab && activeIdx !== i ? 'underline' : 'none',
-                  textDecorationColor: 'var(--border)',
-                  textUnderlineOffset: '6px',
+                  textDecorationColor: 'rgba(196,125,23,0.3)',
+                  textUnderlineOffset: '8px',
                 }}
               >
                 {token.text}
               </button>
-              {/* Interlineal — novedad de este commit */}
               {showText && token.vocab && (
-                <span className="text-[10px] leading-none text-center max-w-[5rem] truncate" style={{ color: 'var(--amber)', opacity: 0.75 }}>
+                <span className="text-[10px] leading-none text-center truncate max-w-[5rem]" style={{ color: 'var(--amber)', opacity: 0.7 }}>
                   {shortMeaning(token.vocab.significado)}
                 </span>
               )}
@@ -128,41 +125,56 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
         </div>
       </div>
 
-      {/* ── Traducción completa ── */}
+      {/* ── Traducción ── */}
       {showText && (
-        <div className="mx-0 mb-4 px-4 py-3" style={{ borderLeft: '3px solid var(--amber)', background: 'rgba(196,125,23,0.05)' }}>
-          <p className="text-[9px] tracking-[0.25em] uppercase mb-1" style={{ color: 'var(--amber)', opacity: 0.7 }}>Traducción</p>
+        <div className="mx-0 mb-5 px-4 py-3" style={{ borderLeft: '3px solid var(--amber)', background: 'rgba(196,125,23,0.05)' }}>
+          <p className="text-[8px] tracking-[0.3em] uppercase mb-1.5" style={{ color: 'var(--amber)', opacity: 0.7 }}>Traducción</p>
           <p className="text-base leading-relaxed" style={{ color: 'var(--text)' }}>{dialogue.frase_es}</p>
         </div>
       )}
 
-      {/* ── Vocabulario — siempre visible ── */}
+      {/* ── Vocabulario — tarjetas ── */}
       {dialogue.vocabulario_desglosado.length > 0 && (
-        <div style={{ borderTop: '1px solid var(--border)' }}>
-          <p className="pt-4 pb-2 text-[9px] tracking-[0.3em] uppercase" style={{ color: 'var(--muted)' }}>Vocabulario</p>
+        <div className="mb-1">
+          <div className="flex items-center justify-between py-3" style={{ borderTop: '1px solid var(--border)' }}>
+            <span className="text-[8px] tracking-[0.35em] uppercase font-bold" style={{ color: 'var(--muted)' }}>Vocabulario</span>
+            <span className="jp text-[10px]" style={{ color: 'var(--muted)', opacity: 0.35 }}>語彙</span>
+          </div>
           {dialogue.vocabulario_desglosado.map((v, i) => {
-            const idx = tokens.findIndex(t => t.vocab?.forma === v.forma)
+            const idx      = tokens.findIndex(t => t.vocab?.forma === v.forma)
+            const isActive = activeIdx === idx
             return (
-              <div key={i} className="flex items-center gap-3 py-3 transition-all" style={{ borderBottom: '1px solid var(--border)' }}>
-                <button
-                  onClick={(e) => { e.stopPropagation(); setActiveIdx(activeIdx === idx ? null : idx) }}
-                  className="flex items-start gap-3 text-left flex-1 min-w-0"
-                  onMouseEnter={e => (e.currentTarget.style.paddingLeft = '6px')}
-                  onMouseLeave={e => (e.currentTarget.style.paddingLeft = '0')}
-                >
-                  <span className="shrink-0 w-6 text-right text-[10px] tracking-widest mt-0.5" style={{ color: 'var(--muted)' }}>
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <div className="min-w-0">
-                    <div className="flex items-baseline gap-2">
-                      <span className="jp font-bold text-lg shrink-0" style={{ color: 'var(--amber-l)' }}>{v.forma}</span>
-                      <span className="text-xs" style={{ color: 'var(--muted)' }}>{v.lectura}</span>
-                    </div>
-                    <p className="text-sm mt-0.5 leading-snug" style={{ color: 'var(--text)', opacity: 0.85 }}>{v.significado}</p>
+              <button
+                key={i}
+                onClick={(e) => { e.stopPropagation(); setActiveIdx(isActive ? null : idx) }}
+                className="vocab-card w-full text-left mb-2 relative overflow-hidden"
+                style={{
+                  background: isActive ? 'rgba(196,125,23,0.06)' : 'var(--surface)',
+                  border: '1px solid var(--border)',
+                  borderLeft: `3px solid ${isActive ? 'var(--amber-l)' : 'var(--amber)'}`,
+                  borderRadius: 3,
+                  padding: '14px 48px 14px 16px',
+                }}
+              >
+                <span aria-hidden style={{
+                  position: 'absolute', right: -4, top: '50%', transform: 'translateY(-50%)',
+                  fontSize: '5rem', fontWeight: 900, fontFamily: 'var(--font-latin)',
+                  color: 'var(--amber)', opacity: 0.055, lineHeight: 1,
+                  userSelect: 'none', pointerEvents: 'none', letterSpacing: '-0.04em',
+                }}>
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[8px] tracking-[0.2em] mb-1" style={{ color: 'var(--muted)' }}>{v.lectura}</p>
+                    <p className="jp font-bold text-xl leading-none mb-2" style={{ color: isActive ? 'var(--amber-l)' : 'var(--amber)' }}>{v.forma}</p>
+                    <p className="text-sm leading-snug" style={{ color: 'var(--text)', opacity: 0.85 }}>{v.significado}</p>
                   </div>
-                </button>
-                <VocabAudioBtn forma={v.forma} visible={showAudio} />
-              </div>
+                  <div onClick={(e) => e.stopPropagation()} className="shrink-0 self-center">
+                    <VocabAudioBtn forma={v.forma} visible={showAudio} />
+                  </div>
+                </div>
+              </button>
             )
           })}
         </div>

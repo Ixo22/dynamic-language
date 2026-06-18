@@ -25,11 +25,10 @@ body {
 
 ::selection { background: #c47d1728; color: var(--text); }
 
-::-webkit-scrollbar       { width: 2px; }
+::-webkit-scrollbar       { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); }
+::-webkit-scrollbar-thumb { background: var(--amber); opacity: 0.5; border-radius: 2px; }
 
-/* Grain de papel — sutil */
 body::after {
   content: '';
   position: fixed;
@@ -45,23 +44,47 @@ body::after {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes wave {
   0%, 100% { transform: scaleY(0.3); }
   50%       { transform: scaleY(1); }
 }
-
 @keyframes breathe {
   0%, 100% { opacity: 0.018; transform: scale(1); }
   50%       { opacity: 0.028; transform: scale(1.03); }
 }
-
 @keyframes kanji-pulse {
   0%, 100% { opacity: 0.12; }
   50%       { opacity: 0.35; }
+}
+@keyframes stamp-in {
+  0%   { opacity: 0; transform: scale(1.5) rotate(-6deg); }
+  65%  { opacity: 1; transform: scale(0.93) rotate(2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-1.5deg); }
 }
 
 .fade-up     { animation: fade-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
 .breathe     { animation: breathe 5s ease-in-out infinite; }
 .kanji-pulse { animation: kanji-pulse 1.8s ease-in-out infinite; }
+.stamp-in    { animation: stamp-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
 .jp          { font-family: var(--font-jp); }
+
+/* Tokens de frase: salto de tinta */
+.token-btn {
+  transition: transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.1s ease;
+  display: inline-block;
+}
+.token-btn:hover  { transform: translateY(-5px) scale(1.07); }
+.token-btn:active { transform: translateY(-1px) scale(0.97); }
+
+/* Tarjetas de vocabulario */
+.vocab-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.vocab-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+}
+
+/* Botones SRS */
+.srs-no:hover  .srs-label { color: var(--red)   !important; opacity: 1 !important; }
+.srs-yes:hover .srs-label { color: var(--amber) !important; opacity: 1 !important; }
