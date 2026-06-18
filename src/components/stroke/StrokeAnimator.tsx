@@ -87,16 +87,18 @@ function AnimatedStroke({ svgContent, char, speed, replayKey }: {
     container.innerHTML = ''
     container.appendChild(svg)
 
-    const mult = speed === 'slow' ? 10 : 4
+    const mult  = speed === 'slow' ? 22 : 3
+    const gap   = speed === 'slow' ? 400 : 80
+    const minMs = speed === 'slow' ? 1200 : 300
     let delay = 0
     paths.forEach(path => {
       const len      = (path as SVGPathElement).getTotalLength?.() ?? 200
-      const duration = Math.max(500, len * mult)
+      const duration = Math.max(minMs, len * mult)
       setTimeout(() => {
         path.style.transition       = `stroke-dashoffset ${duration}ms ease-in-out`
         path.style.strokeDashoffset = '0'
       }, delay)
-      delay += duration + 120
+      delay += duration + gap
     })
   }, [svgContent, speed, replayKey])
 
