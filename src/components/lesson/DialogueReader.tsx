@@ -1,97 +1,154 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { DialogueResponse, Token, VocabItem } from '@/lib/types'
 import { WordPopup } from './WordPopup'
 
 interface Props {
-  dialogue: DialogueResponse
+  dialogue:  DialogueResponse
   showHints: boolean
+}
+
+function speakWord(text: string, onStart: () => void, onEnd: () => void) {
+  if (!window.speechSynthesis) return
+  window.speechSynthesis.cancel()
+  const u = new SpeechSynthesisUtterance(text)
+  u.lang = 'ja-JP'; u.rate = 0.8; u.pitch = 1.1
+  const voice = window.speechSynthesis.getVoices().find(v => v.lang.startsWith('ja'))
+  if (voice) u.voice = voice
+  u.onstart = onStart; u.onend = onEnd; u.onerror = onEnd
+  window.speechSynthesis.speak(u)
+}
+
+function VocabAudioBtn({ forma }: { forma: string }) {
+  const [playing, setPlaying] = useState(false)
+  function handle(e: React.MouseEvent) {
+    e.stopPropagation()
+    if (playing) { window.speechSynthesis?.cancel(); setPlaying(false); return }
+    speakWord(forma, () => setPlaying(true), () => setPlaying(false))
+  }
+  return (
+    <button
+      onClick={handle}
+      className="shrink-0 w-7 h-7 flex items-center justify-center rounded-full transition-colors ml-auto"
+      style={{
+        border: '1px solid', borderColor: playing ? 'var(--amber)' : 'var(--border)',
+        background: playing ? 'rgba(196,125,23,0.15)' : 'transparent',
+        color: playing ? 'var(--amber)' : 'var(--muted)',
+      }}
+    >
+      {playing ? <span className="w-1.5 h-1.5 rounded-sm" style={{ background: 'var(--amber)' }} /> : <span style={{ fontSize: 9, marginLeft: 1 }}>▶</span>}
+    </button>
+  )
 }
 
 function tokenize(phrase: string, vocab: VocabItem[]): Token[] {
   const tokens: Token[] = []
   let remaining = phrase
-
   while (remaining.length > 0) {
     let matched = false
     for (const v of vocab) {
       if (remaining.startsWith(v.forma)) {
         tokens.push({ text: v.forma, vocab: v, isVocab: true })
         remaining = remaining.slice(v.forma.length)
-        matched = true
-        break
+        matched = true; break
       }
     }
     if (!matched) {
       const last = tokens[tokens.length - 1]
-      if (last && !last.isVocab) {
-        last.text += remaining[0]
-      } else {
-        tokens.push({ text: remaining[0], vocab: null, isVocab: false })
-      }
+      if (last && !last.isVocab) last.text += remaining[0]
+      else tokens.push({ text: remaining[0], vocab: null, isVocab: false })
       remaining = remaining.slice(1)
     }
   }
-
   return tokens
 }
 
 export function DialogueReader({ dialogue, showHints }: Props) {
   const [activeIdx, setActiveIdx] = useState<number | null>(null)
-  const tokens = tokenize(dialogue.frase_completa_jp, dialogue.vocabulario_desglosado)
+  const tokens      = tokenize(dialogue.frase_completa_jp, dialogue.vocabulario_desglosado)
+  const ambientChar = dialogue.frase_completa_jp[0] ?? '語'
+
+  useEffect(() => {
+    if (activeIdx === null) return
+    const close = () => setActiveIdx(null)
+    document.addEventListener('click', close)
+    return () => document.removeEventListener('click', close)
+  }, [activeIdx])
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap gap-1 justify-center items-end">
-        {tokens.map((token, i) => (
-          <div key={i} className="relative flex flex-col items-center">
-            {showHints && token.vocab && (
-              <span className="text-[#a78bfa] text-[10px] leading-none mb-0.5 whitespace-nowrap">
-                {token.vocab.lectura}
-              </span>
-            )}
-            <button
-              onClick={() => {
-                if (!token.isVocab) return
-                setActiveIdx(activeIdx === i ? null : i)
-              }}
-              className={`text-3xl sm:text-4xl leading-none transition-colors ${
-                token.isVocab
-                  ? 'text-slate-100 hover:text-[#a78bfa] cursor-pointer'
-                  : 'text-slate-300 cursor-default'
-              } ${activeIdx === i ? 'text-[#a78bfa]' : ''}`}
-              style={{ fontFamily: "'Noto Sans JP', sans-serif" }}
-            >
-              {token.text}
-            </button>
-            {activeIdx === i && token.vocab && (
-              <WordPopup vocab={token.vocab} onClose={() => setActiveIdx(null)} />
-            )}
-          </div>
-        ))}
+    <div>
+      {/* ── Frase ── */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none breathe" aria-hidden>
+          <span className="jp font-black leading-none" style={{ fontSize: 'clamp(14rem, 55vw, 22rem)', color: 'var(--text)' }}>
+            {ambientChar}
+          </span>
+        </div>
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 50% at center, rgba(196,125,23,0.04) 0%, transparent 70%)' }} />
+        <div className="relative flex flex-wrap gap-x-1 gap-y-4 justify-center items-end py-12">
+          {tokens.map((token, i) => (
+            <div key={i} className="relative flex flex-col items-center gap-0.5">
+              {showHints && token.vocab && (
+                <span className="jp text-[11px] leading-none tracking-wide" style={{ color: 'var(--amber)', opacity: 0.65 }}>
+                  {token.vocab.lectura}
+                </span>
+              )}
+              <button
+                onClick={(e) => { if (!token.isVocab) return; e.stopPropagation(); setActiveIdx(activeIdx === i ? null : i) }}
+                className="jp leading-none transition-all duration-100"
+                style={{
+                  fontSize: 'clamp(2.8rem, 10vw, 5rem)',
+                  color: activeIdx === i ? 'var(--amber)' : 'var(--text)',
+                  opacity: token.isVocab ? 1 : 0.55,
+                  cursor: token.isVocab ? 'pointer' : 'default',
+                  fontWeight: token.isVocab ? 700 : 400,
+                  textDecorationLine: token.isVocab && activeIdx !== i ? 'underline' : 'none',
+                  textDecorationColor: 'var(--border)',
+                  textUnderlineOffset: '6px',
+                }}
+              >
+                {token.text}
+              </button>
+              {activeIdx === i && token.vocab && (
+                <WordPopup vocab={token.vocab} onClose={() => setActiveIdx(null)} />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="mt-4 space-y-1">
-        {dialogue.vocabulario_desglosado.map((v, i) => (
-          <button
-            key={i}
-            onClick={() => {
-              const idx = tokens.findIndex(t => t.vocab?.forma === v.forma)
-              setActiveIdx(activeIdx === idx ? null : idx)
-            }}
-            className="w-full text-left px-3 py-2 rounded-lg border border-[#2d2d44] hover:border-[#7c3aed]/40 transition-colors group"
-          >
-            <span className="text-[#a78bfa] font-medium" style={{ fontFamily: "'Noto Sans JP', sans-serif" }}>
-              {v.forma}
-            </span>
-            <span className="text-slate-500 text-xs ml-2">{v.lectura}</span>
-            <span className="text-slate-400 text-sm ml-2 group-hover:text-slate-200 transition-colors">
-              — {v.significado}
-            </span>
-          </button>
-        ))}
-      </div>
+      {/* ── Vocabulario ── */}
+      {dialogue.vocabulario_desglosado.length > 0 && (
+        <div style={{ borderTop: '1px solid var(--border)' }}>
+          <p className="pt-4 pb-2 text-[9px] tracking-[0.3em] uppercase" style={{ color: 'var(--muted)' }}>Vocabulario</p>
+          {dialogue.vocabulario_desglosado.map((v, i) => {
+            const idx = tokens.findIndex(t => t.vocab?.forma === v.forma)
+            return (
+              <div key={i} className="flex items-center gap-3 py-3 transition-all" style={{ borderBottom: '1px solid var(--border)' }}>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setActiveIdx(activeIdx === idx ? null : idx) }}
+                  className="flex items-start gap-3 text-left flex-1 min-w-0"
+                  onMouseEnter={e => (e.currentTarget.style.paddingLeft = '6px')}
+                  onMouseLeave={e => (e.currentTarget.style.paddingLeft = '0')}
+                >
+                  <span className="shrink-0 w-6 text-right text-[10px] tracking-widest mt-0.5" style={{ color: 'var(--muted)' }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <div className="min-w-0">
+                    <div className="flex items-baseline gap-2">
+                      <span className="jp font-bold text-lg shrink-0" style={{ color: 'var(--amber-l)' }}>{v.forma}</span>
+                      <span className="text-xs" style={{ color: 'var(--muted)' }}>{v.lectura}</span>
+                    </div>
+                    <p className="text-sm mt-0.5 leading-snug" style={{ color: 'var(--text)', opacity: 0.85 }}>{v.significado}</p>
+                  </div>
+                </button>
+                <VocabAudioBtn forma={v.forma} />
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

@@ -10,24 +10,29 @@ import { InputPractice } from './InputPractice'
 import { StrokeAnimator } from '@/components/stroke/StrokeAnimator'
 
 const TOGGLES_KEY = 'dl_toggles'
-const LEVEL_KEY = 'dl_level'
+const LEVEL_KEY   = 'dl_level'
 
 const DEFAULT_TOGGLES: UIToggles = {
   showAudio: true,
-  showText: true,
+  showText:  true,
   showInput: false,
   showHints: true,
+}
+
+const LEVEL_LABELS: Record<JLPTLevel, string> = {
+  A1: 'Principiante',
+  A2: 'Elemental',
 }
 
 type Tab = 'lesson' | 'stroke'
 
 export function LessonPanel() {
-  const [tab, setTab] = useState<Tab>('lesson')
-  const [toggles, setToggles] = useState<UIToggles>(DEFAULT_TOGGLES)
-  const [level, setLevel] = useState<JLPTLevel>('A1')
+  const [tab, setTab]           = useState<Tab>('lesson')
+  const [toggles, setToggles]   = useState<UIToggles>(DEFAULT_TOGGLES)
+  const [level, setLevel]       = useState<JLPTLevel>('A1')
   const [dialogue, setDialogue] = useState<DialogueResponse | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading]   = useState(false)
+  const [error, setError]       = useState<string | null>(null)
 
   useEffect(() => {
     try {
@@ -44,14 +49,13 @@ export function LessonPanel() {
     setDialogue(null)
     try {
       const res = await fetch('/api/generate-dialogue', {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ level, exclude: dialogue?.frase_completa_jp }),
+        body:    JSON.stringify({ level, exclude: dialogue?.frase_completa_jp }),
       })
-      if (!res.ok) throw new Error('Error generando diálogo')
-      const data = await res.json()
-      setDialogue(data)
-    } catch (e) {
+      if (!res.ok) throw new Error()
+      setDialogue(await res.json())
+    } catch {
       setError('No se pudo generar el diálogo. Comprueba tu API key.')
     } finally {
       setLoading(false)
@@ -74,19 +78,29 @@ export function LessonPanel() {
   }
 
   return (
-    <div className="min-h-screen bg-[#080810] text-slate-200 flex flex-col">
-      <header className="border-b border-[#1e1e2e] px-4 py-3 flex items-center justify-between">
-        <h1 className="text-[#a78bfa] font-bold text-lg tracking-tight">動的言語</h1>
-        <div className="flex gap-1">
+    <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
+
+      {/* ─── Cabecera ─── */}
+      <header className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="flex items-center gap-2.5">
+          <div
+            className="w-7 h-7 flex items-center justify-center jp font-black text-[11px] shrink-0 select-none"
+            style={{ background: 'var(--red)', color: '#f5ede0', borderRadius: 3 }}
+          >
+            語
+          </div>
+          <div>
+            <h1 className="jp font-bold text-base leading-none" style={{ color: 'var(--text)' }}>動的言語</h1>
+            <p className="text-[9px] tracking-[0.12em] uppercase mt-0.5" style={{ color: 'var(--muted)' }}>Japonés real</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-px">
           {(['A1', 'A2'] as JLPTLevel[]).map(l => (
             <button
               key={l}
               onClick={() => handleLevel(l)}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-                level === l
-                  ? 'bg-[#7c3aed] text-white'
-                  : 'text-slate-500 hover:text-slate-300 border border-[#2d2d44]'
-              }`}
+              className="px-3 py-1 text-xs font-semibold transition-all"
+              style={level === l ? { background: 'var(--amber)', color: 'var(--bg)', borderRadius: 3 } : { color: 'var(--muted)' }}
             >
               {l}
             </button>
@@ -94,91 +108,121 @@ export function LessonPanel() {
         </div>
       </header>
 
-      <div className="border-b border-[#1e1e2e] flex">
-        {([['lesson', '📚 Lección'], ['stroke', '✍️ Trazos']] as [Tab, string][]).map(([t, label]) => (
+      {/* ─── Pestañas ─── */}
+      <div className="flex" style={{ borderBottom: '1px solid var(--border)' }}>
+        {([['lesson', 'Lección'], ['stroke', 'Trazos']] as [Tab, string][]).map(([t, label]) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`flex-1 py-3 text-sm font-medium transition-colors ${
-              tab === t
-                ? 'text-[#a78bfa] border-b-2 border-[#7c3aed]'
-                : 'text-slate-500 hover:text-slate-300'
-            }`}
+            className="px-5 py-3 text-sm font-semibold relative transition-colors"
+            style={{ color: tab === t ? 'var(--text)' : 'var(--muted)' }}
           >
             {label}
+            {tab === t && (
+              <span className="absolute bottom-0 left-5 right-5 h-[2px]" style={{ background: 'var(--amber)', borderRadius: '2px 2px 0 0' }} />
+            )}
           </button>
         ))}
       </div>
 
-      <main className="flex-1 px-4 py-6 max-w-lg mx-auto w-full space-y-6">
+      {/* ─── Contenido ─── */}
+      <main className="flex-1 flex flex-col max-w-lg mx-auto w-full">
+
         {tab === 'lesson' && (
-          <>
-            <ToggleBar toggles={toggles} onChange={handleToggle} />
+          <div className="flex flex-col flex-1">
+            <div style={{ borderBottom: '1px solid var(--border)' }}>
+              <ToggleBar toggles={toggles} onChange={handleToggle} />
+            </div>
 
-            {loading && (
-              <div className="flex flex-col items-center gap-3 py-16">
-                <div className="w-8 h-8 border-2 border-[#7c3aed] border-t-transparent rounded-full animate-spin" />
-                <p className="text-slate-500 text-sm">Generando diálogo...</p>
-              </div>
-            )}
-
-            {error && (
-              <div className="bg-rose-950/30 border border-rose-500/30 rounded-xl p-4 text-rose-400 text-sm text-center">
-                {error}
-              </div>
-            )}
-
-            {dialogue && !loading && (
-              <div className="space-y-5">
-                <div className="bg-[#0d0d1a] border border-[#1e1e2e] rounded-2xl p-4 space-y-1">
-                  <p className="text-[10px] text-slate-600 uppercase tracking-widest">Escena</p>
-                  <p className="text-slate-400 text-sm italic">{dialogue.contexto_escena}</p>
+            <div className="flex-1">
+              {loading && (
+                <div className="flex flex-col items-center justify-center gap-5 py-32">
+                  <span className="jp font-black kanji-pulse select-none" style={{ fontSize: '5rem', color: 'var(--text)', lineHeight: 1 }}>言</span>
+                  <p className="text-[10px] tracking-[0.35em] uppercase" style={{ color: 'var(--muted)' }}>Generando frase</p>
                 </div>
+              )}
 
-                <div className="bg-[#0d0d1a] border border-[#1e1e2e] rounded-2xl p-5 space-y-4">
-                  <DialogueReader dialogue={dialogue} showHints={toggles.showHints} />
+              {error && !loading && (
+                <div className="px-5 pt-10">
+                  <p className="text-sm" style={{ color: 'var(--red)' }}>{error}</p>
+                </div>
+              )}
 
+              {dialogue && !loading && (
+                <div className="fade-up">
+                  {/* Contexto de escena */}
+                  <div className="px-5 pt-6 flex items-center gap-3">
+                    <span
+                      className="shrink-0 text-[9px] tracking-[0.25em] uppercase font-semibold px-2 py-0.5"
+                      style={{ color: 'var(--bg)', background: 'var(--muted)', borderRadius: 2 }}
+                    >
+                      {level} · {LEVEL_LABELS[level]}
+                    </span>
+                    <p className="text-xs italic leading-snug" style={{ color: 'var(--muted)' }}>
+                      {dialogue.contexto_escena}
+                    </p>
+                  </div>
+
+                  {/* Frase */}
+                  <div className="px-5">
+                    <DialogueReader dialogue={dialogue} showHints={toggles.showHints} />
+                  </div>
+
+                  {/* Traducción */}
                   {toggles.showText && (
-                    <p className="text-slate-400 text-sm text-center border-t border-[#1e1e2e] pt-3 italic">
-                      {dialogue.frase_es}
+                    <p className="px-5 pb-6 text-sm italic leading-relaxed" style={{ color: 'var(--muted)' }}>
+                      &ldquo;{dialogue.frase_es}&rdquo;
                     </p>
                   )}
 
+                  {/* Audio */}
                   {toggles.showAudio && (
-                    <div className="flex justify-center pt-1">
+                    <div className="px-5 py-4" style={{ borderTop: '1px solid var(--border)' }}>
                       <AudioPlayer text={dialogue.frase_completa_jp} />
                     </div>
                   )}
-                </div>
 
-                {toggles.showInput && (
-                  <div className="bg-[#0d0d1a] border border-[#1e1e2e] rounded-2xl p-4">
-                    <InputPractice target={dialogue.frase_completa_jp} />
+                  {/* Práctica */}
+                  {toggles.showInput && (
+                    <div className="px-5 py-5" style={{ borderTop: '1px solid var(--border)' }}>
+                      <InputPractice target={dialogue.frase_completa_jp} />
+                    </div>
+                  )}
+
+                  {/* SRS */}
+                  <div style={{ borderTop: '1px solid var(--border)' }}>
+                    <p className="px-5 pt-5 text-[10px] tracking-[0.25em] uppercase text-center mb-1" style={{ color: 'var(--muted)' }}>
+                      ¿Entendiste la frase?
+                    </p>
+                    <SRSButtons phrase={dialogue.frase_completa_jp} />
                   </div>
-                )}
-
-                <div className="bg-[#0d0d1a] border border-[#1e1e2e] rounded-2xl p-4">
-                  <p className="text-xs text-slate-600 text-center mb-3 uppercase tracking-widest">Repetición Espaciada</p>
-                  <SRSButtons phrase={dialogue.frase_completa_jp} />
                 </div>
-              </div>
-            )}
+              )}
+            </div>
 
+            {/* Siguiente frase */}
             <button
               onClick={fetchDialogue}
               disabled={loading}
-              className="w-full py-3 rounded-xl border border-[#2d2d44] text-slate-400 text-sm hover:border-[#7c3aed]/50 hover:text-[#a78bfa] transition-all disabled:opacity-40 active:scale-[0.98]"
+              className="group flex items-center justify-between w-full px-5 py-4 transition-colors"
+              style={{ borderTop: '1px solid var(--border)', color: 'var(--muted)' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
             >
-              Nueva frase →
+              <span className="text-[11px] tracking-[0.2em] uppercase">{loading ? 'Cargando...' : 'Ver otra frase'}</span>
+              <span className="text-base group-hover:translate-x-1 transition-transform inline-block">→</span>
             </button>
-          </>
+          </div>
         )}
 
         {tab === 'stroke' && (
-          <div className="bg-[#0d0d1a] border border-[#1e1e2e] rounded-2xl p-5">
-            <StrokeAnimator />
+          <div className="p-5">
+            <div className="p-5" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 4 }}>
+              <StrokeAnimator />
+            </div>
           </div>
         )}
+
       </main>
     </div>
   )

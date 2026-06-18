@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { HIRAGANA_ROWS, KATAKANA_ROWS, DAKUTEN_HIRAGANA, DAKUTEN_KATAKANA, KanaRow } from '@/lib/kana-data'
 
 type Tab = 'hiragana' | 'katakana'
@@ -14,13 +14,14 @@ function KanaGrid({ rows }: { rows: KanaRow[] }) {
             char ? (
               <div
                 key={ci}
-                className="w-10 h-10 flex flex-col items-center justify-center rounded-lg bg-[#12121a] border border-[#2d2d44] hover:border-[#7c3aed]/50 cursor-default group transition-colors"
+                className="w-10 h-10 flex flex-col items-center justify-center cursor-default transition-colors"
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 3 }}
                 title={char.romaji}
               >
-                <span className="text-base text-slate-200 leading-none" style={{ fontFamily: "'Noto Sans JP', sans-serif" }}>
+                <span className="jp text-base leading-none" style={{ color: 'var(--text)' }}>
                   {char.kana}
                 </span>
-                <span className="text-[8px] text-slate-600 group-hover:text-[#a78bfa] leading-none mt-0.5 transition-colors">
+                <span className="text-[8px] leading-none mt-0.5" style={{ color: 'var(--muted)' }}>
                   {char.romaji}
                 </span>
               </div>
@@ -36,33 +37,47 @@ function KanaGrid({ rows }: { rows: KanaRow[] }) {
 
 export function KanaOverlay() {
   const [open, setOpen] = useState(false)
-  const [tab, setTab] = useState<Tab>('hiragana')
+  const [tab, setTab]   = useState<Tab>('hiragana')
+  const containerRef    = useRef<HTMLDivElement>(null)
+
+  /* Cierra al hacer clic fuera del panel o del botón */
+  useEffect(() => {
+    if (!open) return
+    function handleClick(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('click', handleClick)
+    return () => document.removeEventListener('click', handleClick)
+  }, [open])
 
   const rows = tab === 'hiragana'
     ? [...HIRAGANA_ROWS, ...DAKUTEN_HIRAGANA]
     : [...KATAKANA_ROWS, ...DAKUTEN_KATAKANA]
 
   return (
-    <>
-      <button
-        onClick={() => setOpen(o => !o)}
-        className="fixed bottom-6 right-6 z-50 bg-[#7c3aed] text-white text-xs font-medium px-3 py-2 rounded-full shadow-lg shadow-[#7c3aed]/40 hover:bg-[#6d28d9] active:scale-95 transition-all"
-      >
-        {open ? '✕ Cerrar' : '？ Kana'}
-      </button>
+    /* ref cubre el botón + el panel para que clicks internos no cierren */
+    <div ref={containerRef} className="fixed bottom-6 right-5 z-50 flex flex-col items-end gap-2">
 
+      {/* Panel */}
       {open && (
-        <div className="fixed bottom-16 right-6 z-40 w-72 bg-[#0d0d1a] border border-[#2d2d44] rounded-2xl shadow-2xl shadow-black/60 overflow-hidden">
-          <div className="flex border-b border-[#2d2d44]">
+        <div
+          className="w-72 overflow-hidden shadow-2xl"
+          style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 4 }}
+        >
+          <div className="flex" style={{ borderBottom: '1px solid var(--border)' }}>
             {(['hiragana', 'katakana'] as Tab[]).map(t => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className={`flex-1 py-2.5 text-xs font-medium capitalize transition-colors ${
-                  tab === t ? 'text-[#a78bfa] bg-[#7c3aed]/10' : 'text-slate-500 hover:text-slate-300'
-                }`}
+                className="flex-1 py-2.5 text-xs font-semibold capitalize transition-colors"
+                style={{
+                  color:      tab === t ? 'var(--amber)' : 'var(--muted)',
+                  background: tab === t ? 'rgba(196,125,23,0.06)' : 'transparent',
+                }}
               >
-                {t}
+                {t === 'hiragana' ? 'Hiragana' : 'Katakana'}
               </button>
             ))}
           </div>
@@ -71,6 +86,28 @@ export function KanaOverlay() {
           </div>
         </div>
       )}
-    </>
+
+      {/* Botón flotante */}
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="transition-all"
+        style={{
+          background:    'var(--surface)',
+          border:        '1px solid var(--border)',
+          borderRadius:  4,
+          color:         open ? 'var(--text)' : 'var(--muted)',
+          fontSize:      '11px',
+          fontWeight:    600,
+          letterSpacing: '0.12em',
+          padding:       '8px 12px',
+          textTransform: 'uppercase',
+        }}
+        onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+        onMouseLeave={e => (e.currentTarget.style.color = open ? 'var(--text)' : 'var(--muted)')}
+      >
+        {open ? 'Cerrar' : 'あ Kana'}
+      </button>
+
+    </div>
   )
 }

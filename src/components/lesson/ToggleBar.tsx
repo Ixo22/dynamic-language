@@ -3,32 +3,37 @@
 import { UIToggles } from '@/lib/types'
 
 interface Props {
-  toggles: UIToggles
+  toggles:  UIToggles
   onChange: (key: keyof UIToggles) => void
 }
 
-const ITEMS: { key: keyof UIToggles; label: string; icon: string }[] = [
-  { key: 'showAudio', label: 'Audio', icon: '🔊' },
-  { key: 'showText', label: 'Texto', icon: '📖' },
-  { key: 'showInput', label: 'Input', icon: '✏️' },
-  { key: 'showHints', label: 'Pistas', icon: '💡' },
+const ITEMS: { key: keyof UIToggles; label: string }[] = [
+  { key: 'showAudio',  label: 'Audio'      },
+  { key: 'showText',   label: 'Traducción' },
+  { key: 'showInput',  label: 'Práctica'   },
+  { key: 'showHints',  label: 'Furigana'   },
 ]
 
 export function ToggleBar({ toggles, onChange }: Props) {
   return (
-    <div className="flex gap-2 justify-center flex-wrap">
-      {ITEMS.map(({ key, label, icon }) => (
+    <div className="flex">
+      {ITEMS.map(({ key, label }, i) => (
         <button
           key={key}
           onClick={() => onChange(key)}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${
-            toggles[key]
-              ? 'bg-[#7c3aed] border-[#7c3aed] text-white shadow-lg shadow-[#7c3aed]/30'
-              : 'bg-transparent border-[#2d2d44] text-slate-400 hover:border-[#7c3aed]/50 hover:text-slate-200'
-          }`}
+          className="flex-1 py-3 text-[11px] font-semibold tracking-wider uppercase transition-colors relative"
+          style={{
+            borderRight: i < ITEMS.length - 1 ? '1px solid var(--border)' : undefined,
+            color:       toggles[key] ? 'var(--text)' : 'var(--muted)',
+          }}
         >
-          <span>{icon}</span>
-          <span>{label}</span>
+          {label}
+          {toggles[key] && (
+            <span
+              className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-[2px] rounded-full"
+              style={{ background: 'var(--amber)' }}
+            />
+          )}
         </button>
       ))}
     </div>
