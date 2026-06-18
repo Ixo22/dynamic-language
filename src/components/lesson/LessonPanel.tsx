@@ -306,7 +306,7 @@ export function LessonPanel() {
                   )}
                   {toggles.showInput && (
                     <div className="px-5 py-5" style={{ borderTop: '1px solid var(--border)' }}>
-                      <InputPractice target={dialogue.frase_completa_jp} />
+                      <InputPractice target={dialogue.frase_completa_jp} vocab={dialogue.vocabulario_desglosado} />
                     </div>
                   )}
                   <div style={{ borderTop: '1px solid var(--border)' }}>
