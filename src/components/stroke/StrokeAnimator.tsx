@@ -125,6 +125,7 @@ export function StrokeAnimator() {
   const [submitted, setSubmitted] = useState('')
   const [chars, setChars]         = useState<CharState[]>([])
   const [speed, setSpeed]         = useState<Speed>('normal')
+  const [soundOn, setSoundOn]     = useState(true)
 
   const suggestions = isLatinInput(input) ? searchBySpanish(input) : []
   const showButton  = input.trim().length > 0 && !isLatinInput(input)
@@ -161,7 +162,7 @@ export function StrokeAnimator() {
 
   function handleClick(i: number) {
     const cs = chars[i]
-    speakChar(cs.char)
+    if (soundOn) speakChar(cs.char)
     if (cs.svgContent) {
       setChars(prev => prev.map((c, idx) => idx === i ? { ...c, replayKey: c.replayKey + 1 } : c))
     }
@@ -228,17 +229,35 @@ export function StrokeAnimator() {
 
       {chars.length > 0 && (
         <div>
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-3 gap-2">
             <p className="text-[8px] tracking-[0.3em] uppercase" style={{ color: 'var(--muted)' }}>{submitted}</p>
-            <div className="flex items-center gap-px" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 3, padding: 2 }}>
-              {(['normal', 'slow'] as Speed[]).map(s => (
-                <button key={s} onClick={() => setSpeed(s)}
-                  className="px-3 py-1 text-[10px] font-semibold transition-all"
-                  style={speed === s ? { background: 'var(--amber)', color: '#0d0b08', borderRadius: 2 } : { color: 'var(--muted)' }}
-                >
-                  {s === 'normal' ? 'Normal' : 'Lento'}
-                </button>
-              ))}
+            <div className="flex items-center gap-2 shrink-0">
+              {/* Velocidad */}
+              <div className="flex items-center gap-px" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 3, padding: 2 }}>
+                {(['normal', 'slow'] as Speed[]).map(s => (
+                  <button key={s} onClick={() => setSpeed(s)}
+                    className="px-3 py-1 text-[10px] font-semibold transition-all"
+                    style={speed === s ? { background: 'var(--amber)', color: '#0d0b08', borderRadius: 2 } : { color: 'var(--muted)' }}
+                  >
+                    {s === 'normal' ? 'Normal' : 'Lento'}
+                  </button>
+                ))}
+              </div>
+              {/* Sonido */}
+              <button
+                onClick={() => setSoundOn(v => !v)}
+                className="flex items-center justify-center w-7 h-7 transition-all"
+                style={{
+                  background: soundOn ? 'rgba(196,125,23,0.15)' : 'var(--surface)',
+                  border: `1px solid ${soundOn ? 'var(--amber)' : 'var(--border)'}`,
+                  borderRadius: 3,
+                  color: soundOn ? 'var(--amber)' : 'var(--muted)',
+                  fontSize: 13,
+                }}
+                title={soundOn ? 'Silenciar' : 'Activar sonido'}
+              >
+                <span style={{ textDecoration: soundOn ? 'none' : 'line-through' }}>♪</span>
+              </button>
             </div>
           </div>
 
