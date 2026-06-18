@@ -20,12 +20,10 @@ function searchBySpanish(q: string) {
   ).slice(0, 6)
 }
 
-/* Si el texto es solo caracteres latinos (el usuario escribe en español) */
 function isLatinInput(text: string): boolean {
   return text.trim().length >= 2 && !/[぀-ゟ゠-ヿ一-鿿]/.test(text)
 }
 
-/* ── KanjiVG ── */
 function getKanjiVGUrl(char: string): string | null {
   const cp = char.codePointAt(0)
   if (!cp) return null
@@ -43,15 +41,23 @@ function isKana(char: string): boolean {
   return (cp >= 0x3040 && cp <= 0x309f) || (cp >= 0x30a0 && cp <= 0x30ff)
 }
 
+type Speed = 'normal' | 'slow'
+
 interface CharState {
-  char: string
+  char:       string
   svgContent: string | null
-  loading: boolean
-  error: boolean
+  loading:    boolean
+  error:      boolean
+  replayKey:  number
 }
 
-/* ── Trazo animado con tema ámbar ── */
-function AnimatedStroke({ svgContent, char }: { svgContent: string; char: string }) {
+/* ── Trazo animado ── */
+function AnimatedStroke({ svgContent, char, speed, replayKey }: {
+  svgContent: string
+  char:       string
+  speed:      Speed
+  replayKey:  number
+}) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -81,17 +87,18 @@ function AnimatedStroke({ svgContent, char }: { svgContent: string; char: string
     container.innerHTML = ''
     container.appendChild(svg)
 
+    const mult = speed === 'slow' ? 10 : 4
     let delay = 0
     paths.forEach(path => {
-      const len = (path as SVGPathElement).getTotalLength?.() ?? 200
-      const duration = Math.max(400, len * 4)
+      const len      = (path as SVGPathElement).getTotalLength?.() ?? 200
+      const duration = Math.max(500, len * mult)
       setTimeout(() => {
         path.style.transition       = `stroke-dashoffset ${duration}ms ease-in-out`
         path.style.strokeDashoffset = '0'
       }, delay)
-      delay += duration + 100
+      delay += duration + 120
     })
-  }, [svgContent])
+  }, [svgContent, speed, replayKey])
 
   return <div ref={containerRef} className="w-[120px] h-[120px] flex items-center justify-center" title={char} />
 }
@@ -101,6 +108,7 @@ export function StrokeAnimator() {
   const [input, setInput]       = useState('')
   const [submitted, setSubmitted] = useState('')
   const [chars, setChars]       = useState<CharState[]>([])
+  const [speed, setSpeed]       = useState<Speed>('normal')
 
   const suggestions = isLatinInput(input) ? searchBySpanish(input) : []
   const showButton  = input.trim().length > 0 && !isLatinInput(input)
@@ -112,7 +120,7 @@ export function StrokeAnimator() {
     setSubmitted(clean)
 
     const charList: CharState[] = [...clean].map(c => ({
-      char: c, svgContent: null, loading: isKanji(c), error: false,
+      char: c, svgContent: null, loading: isKanji(c), error: false, replayKey: 0,
     }))
     setChars(charList)
 
@@ -135,6 +143,10 @@ export function StrokeAnimator() {
     }
   }
 
+  function replayChar(i: number) {
+    setChars(prev => prev.map((c, idx) => idx === i ? { ...c, replayKey: c.replayKey + 1 } : c))
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     animate(input)
@@ -152,25 +164,17 @@ export function StrokeAnimator() {
           placeholder="日本語 o escribe en español para buscar..."
           className="jp flex-1 px-4 py-2.5 text-sm transition-colors"
           style={{
-            background:   'var(--surface)',
-            border:       '1px solid var(--border)',
-            borderRadius:  3,
-            color:        'var(--text)',
-            outline:      'none',
+            background: 'var(--surface)', border: '1px solid var(--border)',
+            borderRadius: 3, color: 'var(--text)', outline: 'none',
           }}
-          onFocus={e  => (e.currentTarget.style.borderColor = 'var(--amber)')}
-          onBlur={e   => (e.currentTarget.style.borderColor = 'var(--border)')}
+          onFocus={e => (e.currentTarget.style.borderColor = 'var(--amber)')}
+          onBlur={e  => (e.currentTarget.style.borderColor = 'var(--border)')}
         />
         {showButton && (
           <button
             type="submit"
             className="px-4 py-2 text-sm font-bold transition-all"
-            style={{
-              background:   'var(--amber)',
-              color:        '#0d0b08',
-              borderRadius:  3,
-              letterSpacing: '0.05em',
-            }}
+            style={{ background: 'var(--amber)', color: '#0d0b08', borderRadius: 3, letterSpacing: '0.05em' }}
             onMouseEnter={e => (e.currentTarget.style.background = 'var(--amber-l)')}
             onMouseLeave={e => (e.currentTarget.style.background = 'var(--amber)')}
           >
@@ -192,21 +196,13 @@ export function StrokeAnimator() {
                 onClick={() => animate(v.forma)}
                 className="vocab-card text-left px-3 py-3 transition-all"
                 style={{
-                  background:   'var(--surface)',
-                  border:       '1px solid var(--border)',
-                  borderLeft:   '2px solid var(--amber)',
-                  borderRadius:  3,
+                  background: 'var(--surface)', border: '1px solid var(--border)',
+                  borderLeft: '2px solid var(--amber)', borderRadius: 3,
                 }}
               >
-                <p className="text-[8px] tracking-widest mb-0.5" style={{ color: 'var(--muted)' }}>
-                  {v.lectura}
-                </p>
-                <p className="jp font-bold text-xl leading-none mb-1.5" style={{ color: 'var(--amber)' }}>
-                  {v.forma}
-                </p>
-                <p className="text-[10px] leading-snug" style={{ color: 'var(--text)', opacity: 0.7 }}>
-                  {v.significado}
-                </p>
+                <p className="text-[8px] tracking-widest mb-0.5" style={{ color: 'var(--muted)' }}>{v.lectura}</p>
+                <p className="jp font-bold text-xl leading-none mb-1.5" style={{ color: 'var(--amber)' }}>{v.forma}</p>
+                <p className="text-[10px] leading-snug" style={{ color: 'var(--text)', opacity: 0.7 }}>{v.significado}</p>
               </button>
             ))}
           </div>
@@ -223,50 +219,74 @@ export function StrokeAnimator() {
       {/* ── Animación de trazos ── */}
       {chars.length > 0 && (
         <div>
-          <p className="text-[8px] tracking-[0.3em] uppercase mb-3" style={{ color: 'var(--muted)' }}>
-            {submitted}
-          </p>
+          {/* Cabecera: texto + control de velocidad */}
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-[8px] tracking-[0.3em] uppercase" style={{ color: 'var(--muted)' }}>{submitted}</p>
+            <div className="flex items-center gap-px" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 3, padding: 2 }}>
+              {(['normal', 'slow'] as Speed[]).map(s => (
+                <button
+                  key={s}
+                  onClick={() => setSpeed(s)}
+                  className="px-3 py-1 text-[10px] font-semibold transition-all"
+                  style={speed === s
+                    ? { background: 'var(--amber)', color: '#0d0b08', borderRadius: 2 }
+                    : { color: 'var(--muted)' }
+                  }
+                >
+                  {s === 'normal' ? 'Normal' : 'Lento'}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="flex flex-wrap gap-3 justify-center">
             {chars.map((cs, i) => (
               <div key={i} className="flex flex-col items-center gap-2">
                 <div
-                  className="w-[120px] h-[120px] flex items-center justify-center overflow-hidden"
+                  className="w-[120px] h-[120px] flex items-center justify-center overflow-hidden transition-all"
                   style={{
-                    background:   'var(--surface)',
-                    border:       '1px solid var(--border)',
-                    borderRadius:  3,
+                    background: 'var(--surface)',
+                    border: `1px solid ${cs.svgContent ? 'var(--amber)' : 'var(--border)'}`,
+                    borderRadius: 3,
+                    cursor: cs.svgContent ? 'pointer' : 'default',
                   }}
+                  onClick={() => cs.svgContent && replayChar(i)}
+                  title={cs.svgContent ? 'Pulsa para repetir' : undefined}
                 >
                   {isKanji(cs.char) ? (
                     <>
                       {cs.loading && (
-                        <div
-                          className="w-5 h-5 rounded-full border-2 border-t-transparent animate-spin"
-                          style={{ borderColor: 'var(--amber)', borderTopColor: 'transparent' }}
-                        />
+                        <div className="w-5 h-5 rounded-full border-2 animate-spin"
+                          style={{ borderColor: 'var(--amber)', borderTopColor: 'transparent' }} />
                       )}
                       {cs.error && (
                         <span className="text-xs text-center px-3 leading-snug" style={{ color: 'var(--muted)' }}>
-                          Sin datos para este kanji
+                          Sin datos
                         </span>
                       )}
-                      {cs.svgContent && <AnimatedStroke svgContent={cs.svgContent} char={cs.char} />}
+                      {cs.svgContent && (
+                        <AnimatedStroke
+                          svgContent={cs.svgContent}
+                          char={cs.char}
+                          speed={speed}
+                          replayKey={cs.replayKey}
+                        />
+                      )}
                     </>
                   ) : (
-                    <span
-                      className="jp text-5xl"
-                      style={{ color: isKana(cs.char) ? 'var(--amber)' : 'var(--text)' }}
-                    >
+                    <span className="jp text-5xl" style={{ color: isKana(cs.char) ? 'var(--amber)' : 'var(--text)' }}>
                       {cs.char}
                     </span>
                   )}
                 </div>
-                <span className="jp text-xs" style={{ color: 'var(--muted)' }}>
-                  {cs.char}
-                </span>
+                <span className="jp text-xs" style={{ color: 'var(--muted)' }}>{cs.char}</span>
               </div>
             ))}
           </div>
+
+          <p className="text-center text-[9px] mt-3 tracking-widest" style={{ color: 'var(--muted)', opacity: 0.5 }}>
+            Pulsa un kanji para repetir su animación
+          </p>
         </div>
       )}
 
