@@ -26,15 +26,17 @@ const LEVEL_LABELS: Record<JLPTLevel, string> = {
 }
 
 type Tab = 'lesson' | 'cards' | 'stroke'
+const TABS: [Tab, string][] = [['lesson', 'Lección'], ['cards', 'Tarjetas'], ['stroke', 'Trazos']]
 
 export function LessonPanel() {
-  const [tab, setTab]           = useState<Tab>('lesson')
-  const [toggles, setToggles]   = useState<UIToggles>(DEFAULT_TOGGLES)
-  const [level, setLevel]       = useState<JLPTLevel>('A1')
-  const [dialogue, setDialogue] = useState<DialogueResponse | null>(null)
-  const [loading, setLoading]   = useState(false)
-  const [error, setError]       = useState<string | null>(null)
-  const [revealed, setRevealed] = useState(false)
+  const [tab, setTab]                 = useState<Tab>('lesson')
+  const [toggles, setToggles]         = useState<UIToggles>(DEFAULT_TOGGLES)
+  const [level, setLevel]             = useState<JLPTLevel>('A1')
+  const [dialogue, setDialogue]       = useState<DialogueResponse | null>(null)
+  const [loading, setLoading]         = useState(false)
+  const [error, setError]             = useState<string | null>(null)
+  const [revealed, setRevealed]       = useState(false)
+  const [drawerOpen, setDrawerOpen]   = useState(false)
 
   useEffect(() => {
     try {
@@ -84,38 +86,156 @@ export function LessonPanel() {
     try { localStorage.setItem(LEVEL_KEY, l) } catch {}
   }
 
+  function switchTab(t: Tab) {
+    setTab(t)
+    setDrawerOpen(false)
+  }
+
   return (
     <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
 
-      {/* ─── Cabecera ─── */}
-      <header className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 flex items-center justify-center jp font-black text-[11px] shrink-0 select-none sway" style={{ background: 'var(--red)', color: '#f5ede0', borderRadius: 3 }}>語</div>
-          <div>
-            <h1 className="jp font-bold text-base leading-none" style={{ color: 'var(--text)' }}>動的言語</h1>
-            <p className="text-[9px] tracking-[0.12em] uppercase mt-0.5" style={{ color: 'var(--muted)' }}>Japonés real</p>
+      {/* ─── Overlay móvil ─── */}
+      <div
+        className="fixed inset-0 z-50 md:hidden transition-all duration-300"
+        style={{
+          background: 'rgba(0,0,0,0.65)',
+          backdropFilter: 'blur(2px)',
+          pointerEvents: drawerOpen ? 'auto' : 'none',
+          opacity: drawerOpen ? 1 : 0,
+        }}
+        onClick={() => setDrawerOpen(false)}
+      />
+
+      {/* ─── Drawer móvil ─── */}
+      <div
+        className="fixed top-0 left-0 h-full z-50 md:hidden flex flex-col"
+        style={{
+          width: 270,
+          background: 'var(--bg)',
+          borderRight: '1px solid var(--border)',
+          transform: drawerOpen ? 'translateX(0)' : 'translateX(-100%)',
+          transition: 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
+      >
+        {/* Cabecera del drawer */}
+        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 flex items-center justify-center jp font-black text-[11px] select-none sway"
+              style={{ background: 'var(--red)', color: '#f5ede0', borderRadius: 3 }}>語</div>
+            <div>
+              <p className="jp font-bold text-base leading-none" style={{ color: 'var(--text)' }}>動的言語</p>
+              <p className="text-[9px] tracking-[0.12em] uppercase mt-0.5" style={{ color: 'var(--muted)' }}>Japonés real</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setDrawerOpen(false)}
+            className="w-7 h-7 flex items-center justify-center transition-colors"
+            style={{ color: 'var(--muted)', fontSize: 18 }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
+          >✕</button>
+        </div>
+
+        {/* Nivel */}
+        <div className="px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
+          <p className="text-[8px] tracking-[0.3em] uppercase mb-2.5" style={{ color: 'var(--muted)' }}>Nivel</p>
+          <div className="flex gap-2">
+            {(['A1', 'A2'] as JLPTLevel[]).map(l => (
+              <button key={l} onClick={() => handleLevel(l)}
+                className="flex-1 py-2 text-sm font-bold transition-all"
+                style={level === l
+                  ? { background: 'var(--amber)', color: 'var(--bg)', borderRadius: 3 }
+                  : { border: '1px solid var(--border)', color: 'var(--muted)', borderRadius: 3 }
+                }>
+                {l} · {LEVEL_LABELS[l]}
+              </button>
+            ))}
           </div>
         </div>
-        <div className="flex items-center gap-px">
-          {(['A1', 'A2'] as JLPTLevel[]).map(l => (
-            <button key={l} onClick={() => handleLevel(l)} className="px-3 py-1 text-xs font-semibold transition-all"
-              style={level === l ? { background: 'var(--amber)', color: 'var(--bg)', borderRadius: 3 } : { color: 'var(--muted)' }}>
-              {l}
+
+        {/* Navegación */}
+        <nav className="flex flex-col gap-1 px-3 py-4">
+          {TABS.map(([t, label], i) => (
+            <button
+              key={t}
+              onClick={() => switchTab(t)}
+              className="flex items-center gap-3 px-3 py-3.5 text-sm font-semibold transition-all pop-in"
+              style={{
+                animationDelay: `${i * 60}ms`,
+                borderRadius: 3,
+                color: tab === t ? 'var(--amber)' : 'var(--muted)',
+                background: tab === t ? 'rgba(196,125,23,0.08)' : 'transparent',
+                borderLeft: `2px solid ${tab === t ? 'var(--amber)' : 'transparent'}`,
+              }}
+              onMouseEnter={e => { if (tab !== t) e.currentTarget.style.background = 'rgba(255,255,255,0.03)' }}
+              onMouseLeave={e => { if (tab !== t) e.currentTarget.style.background = 'transparent' }}
+            >
+              <span className="w-5 text-center" style={{ fontSize: 15, opacity: 0.6 }}>
+                {t === 'lesson' ? '読' : t === 'cards' ? '語' : '書'}
+              </span>
+              {label}
+              {tab === t && <span className="ml-auto text-[10px] tracking-widest uppercase" style={{ color: 'var(--amber)', opacity: 0.7 }}>Activo</span>}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* ─── Barra sticky ─── */}
+      <div className="sticky top-0 z-30" style={{ background: 'var(--bg)', borderBottom: '1px solid var(--border)' }}>
+
+        <header className="flex items-center justify-between px-5 py-4">
+          <div className="flex items-center gap-2.5">
+            {/* Hamburguesa — solo móvil */}
+            <button
+              className="flex flex-col justify-center gap-1.5 w-8 h-8 md:hidden"
+              onClick={() => setDrawerOpen(o => !o)}
+              aria-label="Menú"
+            >
+              <span className="block h-px w-5 transition-all" style={{ background: 'var(--muted)' }} />
+              <span className="block h-px w-4 transition-all" style={{ background: 'var(--muted)' }} />
+              <span className="block h-px w-5 transition-all" style={{ background: 'var(--muted)' }} />
+            </button>
+
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 flex items-center justify-center jp font-black text-[11px] shrink-0 select-none sway"
+                style={{ background: 'var(--red)', color: '#f5ede0', borderRadius: 3 }}>語</div>
+              <div>
+                <h1 className="jp font-bold text-base leading-none" style={{ color: 'var(--text)' }}>動的言語</h1>
+                <p className="text-[9px] tracking-[0.12em] uppercase mt-0.5" style={{ color: 'var(--muted)' }}>Japonés real</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Selector de nivel — solo desktop */}
+          <div className="hidden md:flex items-center gap-px">
+            {(['A1', 'A2'] as JLPTLevel[]).map(l => (
+              <button key={l} onClick={() => handleLevel(l)} className="px-3 py-1 text-xs font-semibold transition-all"
+                style={level === l ? { background: 'var(--amber)', color: 'var(--bg)', borderRadius: 3 } : { color: 'var(--muted)' }}>
+                {l}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab activo en móvil — indicador compacto */}
+          <span className="md:hidden text-[10px] tracking-[0.2em] uppercase font-semibold" style={{ color: 'var(--amber)' }}>
+            {TABS.find(([t]) => t === tab)?.[1]}
+          </span>
+        </header>
+
+        {/* Tabs — solo desktop */}
+        <div className="hidden md:flex" style={{ borderTop: '1px solid var(--border)' }}>
+          {TABS.map(([t, label]) => (
+            <button key={t} onClick={() => switchTab(t)}
+              className="px-5 py-3 text-sm font-semibold relative transition-colors"
+              style={{ color: tab === t ? 'var(--text)' : 'var(--muted)' }}>
+              {label}
+              {tab === t && <span className="absolute bottom-0 left-5 right-5 h-[2px]" style={{ background: 'var(--amber)', borderRadius: '2px 2px 0 0' }} />}
             </button>
           ))}
         </div>
-      </header>
-
-      {/* ─── Pestañas ─── */}
-      <div className="flex" style={{ borderBottom: '1px solid var(--border)' }}>
-        {([['lesson', 'Lección'], ['cards', 'Tarjetas'], ['stroke', 'Trazos']] as [Tab, string][]).map(([t, label]) => (
-          <button key={t} onClick={() => setTab(t)} className="px-5 py-3 text-sm font-semibold relative transition-colors" style={{ color: tab === t ? 'var(--text)' : 'var(--muted)' }}>
-            {label}
-            {tab === t && <span className="absolute bottom-0 left-5 right-5 h-[2px]" style={{ background: 'var(--amber)', borderRadius: '2px 2px 0 0' }} />}
-          </button>
-        ))}
       </div>
 
+      {/* ─── Contenido ─── */}
       <main className="flex-1 flex flex-col max-w-lg mx-auto w-full">
         {tab === 'lesson' && (
           <div key="lesson" className="flex flex-col flex-1 fade-up">
@@ -134,16 +254,17 @@ export function LessonPanel() {
               {dialogue && !loading && (
                 <div className="fade-up">
                   <div className="px-5 pt-6 flex items-center gap-3 slide-right">
-                    <span className="shrink-0 text-[9px] tracking-[0.25em] uppercase font-semibold px-2 py-0.5" style={{ color: 'var(--bg)', background: 'var(--muted)', borderRadius: 2 }}>
+                    <span className="shrink-0 text-[9px] tracking-[0.25em] uppercase font-semibold px-2 py-0.5"
+                      style={{ color: 'var(--bg)', background: 'var(--muted)', borderRadius: 2 }}>
                       {level} · {LEVEL_LABELS[level]}
                     </span>
                     <p className="text-xs italic leading-snug" style={{ color: 'var(--muted)' }}>{dialogue.contexto_escena}</p>
                   </div>
 
-                  {/* Badge modo solo-audio */}
                   {audioOnlyMode && !revealed && (
                     <div className="px-5 pt-4 pb-2">
-                      <span className="text-[9px] tracking-[0.25em] uppercase px-2 py-0.5" style={{ background: 'rgba(196,125,23,0.12)', color: 'var(--amber)', borderRadius: 2 }}>
+                      <span className="text-[9px] tracking-[0.25em] uppercase px-2 py-0.5"
+                        style={{ background: 'rgba(196,125,23,0.12)', color: 'var(--amber)', borderRadius: 2 }}>
                         Modo escucha — intenta entender
                       </span>
                     </div>
@@ -158,18 +279,14 @@ export function LessonPanel() {
                     />
                   </div>
 
-                  {/* Botón de revelación (solo en modo solo-audio) */}
                   {audioOnlyMode && !revealed && (
                     <div className="px-5 pb-5" style={{ borderTop: '1px solid var(--border)', paddingTop: 16 }}>
-                      <button
-                        onClick={() => setRevealed(true)}
+                      <button onClick={() => setRevealed(true)}
                         className="w-full py-3 text-sm font-semibold transition-colors"
                         style={{ border: '1px solid var(--amber)', borderRadius: 3, color: 'var(--amber)', background: 'rgba(196,125,23,0.06)' }}
                         onMouseEnter={e => (e.currentTarget.style.background = 'rgba(196,125,23,0.12)')}
                         onMouseLeave={e => (e.currentTarget.style.background = 'rgba(196,125,23,0.06)')}
-                      >
-                        ¿Quieres ver la frase y la traducción?
-                      </button>
+                      >¿Quieres ver la frase y la traducción?</button>
                     </div>
                   )}
 
@@ -187,8 +304,7 @@ export function LessonPanel() {
               )}
             </div>
 
-            <button
-              onClick={fetchDialogue} disabled={loading}
+            <button onClick={fetchDialogue} disabled={loading}
               className="group flex items-center justify-between w-full px-5 py-4 transition-colors border-pulse"
               style={{ borderTop: '1px solid var(--border)', color: 'var(--muted)' }}
               onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
