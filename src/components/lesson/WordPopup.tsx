@@ -46,71 +46,63 @@ function AudioBtn({ forma }: { forma: string }) {
   )
 }
 
+function CardContent({ vocab, onClose, showAudio }: Props) {
+  return (
+    <div
+      className="scale-in"
+      style={{
+        background: 'var(--surface)',
+        border: '1px solid var(--amber)',
+        borderRadius: 6,
+        boxShadow: '0 12px 48px rgba(0,0,0,0.75)',
+        width: 260,
+      }}
+      onClick={e => e.stopPropagation()}
+    >
+      <div className="px-4 py-3 flex items-center justify-between gap-2" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="min-w-0">
+          <p className="jp font-bold leading-none" style={{ fontSize: '2rem', color: 'var(--amber)' }}>{vocab.forma}</p>
+          <p className="jp text-sm mt-1 tracking-widest" style={{ color: 'var(--muted)' }}>{vocab.lectura}</p>
+        </div>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {showAudio && <AudioBtn forma={vocab.forma} />}
+          <button
+            onClick={e => { e.stopPropagation(); onClose() }}
+            className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+            style={{ border: '1px solid var(--border)', color: 'var(--muted)', fontSize: 14 }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
+          >✕</button>
+        </div>
+      </div>
+      <div className="px-4 py-3">
+        <p className="text-sm leading-relaxed" style={{ color: 'var(--text)' }}>{vocab.significado}</p>
+      </div>
+    </div>
+  )
+}
+
 export function WordPopup({ vocab, onClose, showAudio }: Props) {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
-  /* ── MÓVIL: portal en document.body — escapa overflow-y:auto del shell ── */
+  /* ── MÓVIL: portal centrado, por encima del navbar ── */
   if (isMobile) {
     return createPortal(
       <>
         {/* Backdrop */}
         <div
-          style={{
-            position: 'fixed', inset: 0, zIndex: 9998,
-            background: 'rgba(0,0,0,0.55)',
-          }}
+          style={{ position: 'fixed', inset: 0, zIndex: 9998, background: 'rgba(0,0,0,0.6)' }}
           onClick={e => { e.stopPropagation(); onClose() }}
         />
-
-        {/* Panel */}
-        <div
-          className="slide-up-in"
-          style={{
-            position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999,
-            background: 'var(--surface)',
-            borderTop: '2px solid var(--amber)',
-            borderRadius: '16px 16px 0 0',
-            boxShadow: '0 -8px 48px rgba(0,0,0,0.7)',
-            paddingBottom: 'env(safe-area-inset-bottom, 8px)',
-          }}
-          onClick={e => e.stopPropagation()}
-        >
-          {/* Handle */}
-          <div className="flex justify-center pt-3 pb-2">
-            <div style={{ width: 40, height: 4, borderRadius: 2, background: 'var(--border)' }} />
-          </div>
-
-          {/* Cabecera */}
-          <div
-            className="flex items-center justify-between px-5 py-3"
-            style={{ borderBottom: '1px solid var(--border)' }}
-          >
-            <div>
-              <p className="jp font-black" style={{ fontSize: '2.4rem', lineHeight: 1, color: 'var(--amber)' }}>
-                {vocab.forma}
-              </p>
-              <p className="jp text-sm mt-1.5 tracking-widest" style={{ color: 'var(--muted)' }}>
-                {vocab.lectura}
-              </p>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              {showAudio && <AudioBtn forma={vocab.forma} />}
-              <button
-                onClick={e => { e.stopPropagation(); onClose() }}
-                className="w-9 h-9 flex items-center justify-center rounded-full"
-                style={{ border: '1px solid var(--border)', color: 'var(--muted)', fontSize: 18 }}
-              >
-                ✕
-              </button>
-            </div>
-          </div>
-
-          {/* Significado */}
-          <div className="px-5 py-4">
-            <p className="text-base leading-relaxed" style={{ color: 'var(--text)' }}>
-              {vocab.significado}
-            </p>
-          </div>
+        {/* Card centrado horizontalmente, justo debajo del navbar (56px) */}
+        <div style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 9999,
+        }}>
+          <CardContent vocab={vocab} onClose={onClose} showAudio={showAudio} />
         </div>
       </>,
       document.body
@@ -120,28 +112,11 @@ export function WordPopup({ vocab, onClose, showAudio }: Props) {
   /* ── DESKTOP: tooltip absolute encima de la palabra ── */
   return (
     <div
-      className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 w-56 pointer-events-none"
+      className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 pointer-events-none"
       onClick={e => e.stopPropagation()}
     >
-      <div
-        className="overflow-hidden pointer-events-auto scale-in"
-        style={{
-          background: 'var(--surface)',
-          border: '1px solid var(--amber)',
-          borderRadius: 4,
-          boxShadow: '0 8px 32px rgba(0,0,0,0.65)',
-        }}
-      >
-        <div className="px-4 py-3 flex items-center justify-between gap-2" style={{ borderBottom: '1px solid var(--border)' }}>
-          <div className="min-w-0">
-            <p className="jp font-bold text-2xl leading-none" style={{ color: 'var(--amber)' }}>{vocab.forma}</p>
-            <p className="jp text-[11px] mt-1 tracking-widest" style={{ color: 'var(--muted)' }}>{vocab.lectura}</p>
-          </div>
-          {showAudio && <AudioBtn forma={vocab.forma} />}
-        </div>
-        <div className="px-4 py-2.5">
-          <p className="text-sm leading-snug" style={{ color: 'var(--text)' }}>{vocab.significado}</p>
-        </div>
+      <div className="pointer-events-auto">
+        <CardContent vocab={vocab} onClose={onClose} showAudio={showAudio} />
       </div>
       <div className="flex justify-center mt-px pointer-events-none">
         <div className="w-0 h-0" style={{
