@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { DialogueResponse, Token, VocabItem } from '@/lib/types'
 import { WordPopup } from './WordPopup'
 import { AudioPlayer } from './AudioPlayer'
@@ -76,6 +76,15 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
   const [revealedSet, setRevealedSet] = useState<Set<string>>(new Set())
   const tokens      = tokenize(dialogue.frase_completa_jp, dialogue.vocabulario_desglosado)
   const ambientChar = dialogue.frase_completa_jp[0] ?? '語'
+
+  const shuffledVocab = useMemo(() => {
+    const arr = [...dialogue.vocabulario_desglosado]
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]]
+    }
+    return arr
+  }, [dialogue])
 
   useEffect(() => {
     if (activeIdx === null) return
@@ -158,7 +167,7 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
             <span className="text-[8px] tracking-[0.35em] uppercase font-bold" style={{ color: 'var(--muted)' }}>Vocabulario</span>
             <span className="jp text-[10px]" style={{ color: 'var(--muted)', opacity: 0.35 }}>語彙</span>
           </div>
-          {dialogue.vocabulario_desglosado.map((v, i) => {
+          {shuffledVocab.map((v, i) => {
             const idx      = tokens.findIndex(t => t.vocab?.forma === v.forma)
             const isActive = activeIdx === idx
             const isShown  = revealedSet.has(v.forma)

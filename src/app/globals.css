@@ -90,19 +90,29 @@ body::after {
   0%, 100% { box-shadow: 0 0 0 0 rgba(196,125,23,0); }
   50%       { box-shadow: 0 0 0 3px rgba(196,125,23,0.18); }
 }
+@keyframes card-from-right {
+  from { opacity: 0; transform: translateX(52px) scale(0.96) rotateY(-4deg); }
+  to   { opacity: 1; transform: translateX(0) scale(1) rotateY(0deg); }
+}
+@keyframes card-from-left {
+  from { opacity: 0; transform: translateX(-52px) scale(0.96) rotateY(4deg); }
+  to   { opacity: 1; transform: translateX(0) scale(1) rotateY(0deg); }
+}
 
-.fade-up      { animation: fade-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.breathe      { animation: breathe 5s ease-in-out infinite; }
-.kanji-pulse  { animation: kanji-pulse 1.8s ease-in-out infinite; }
-.stamp-in     { animation: stamp-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.scale-in     { animation: scale-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.slide-down   { animation: slide-down 0.25s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.slide-up-in  { animation: slide-up-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.slide-right  { animation: slide-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.pop-in       { animation: pop-in 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
-.sway         { animation: sway 5s ease-in-out infinite; }
-.border-pulse { animation: border-pulse 2.5s ease-in-out infinite; }
-.jp           { font-family: var(--font-jp); }
+.fade-up        { animation: fade-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.breathe        { animation: breathe 5s ease-in-out infinite; }
+.kanji-pulse    { animation: kanji-pulse 1.8s ease-in-out infinite; }
+.stamp-in       { animation: stamp-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.scale-in       { animation: scale-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.slide-down     { animation: slide-down 0.25s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.slide-up-in    { animation: slide-up-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.slide-right    { animation: slide-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.pop-in         { animation: pop-in 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.sway           { animation: sway 5s ease-in-out infinite; }
+.border-pulse   { animation: border-pulse 2.5s ease-in-out infinite; }
+.card-from-right { animation: card-from-right 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.card-from-left  { animation: card-from-left  0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.jp             { font-family: var(--font-jp); }
 
 /* Tokens de frase: salto de tinta */
 .token-btn {
@@ -114,11 +124,12 @@ body::after {
 
 /* Tarjetas de vocabulario */
 .vocab-card {
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, border-color 0.18s ease;
+  will-change: transform;
 }
 .vocab-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+  transform: translateY(-3px) scale(1.005);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.5);
 }
 
 /* Botones SRS */

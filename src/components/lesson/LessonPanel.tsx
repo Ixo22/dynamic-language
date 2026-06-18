@@ -7,6 +7,8 @@ import { DialogueReader } from './DialogueReader'
 import { SRSButtons } from './SRSButtons'
 import { InputPractice } from './InputPractice'
 import { StrokeAnimator } from '@/components/stroke/StrokeAnimator'
+import { FlashcardDeck } from '@/components/flashcards/FlashcardDeck'
+import { addVocab } from '@/lib/vocab-store'
 
 const TOGGLES_KEY = 'dl_toggles'
 const LEVEL_KEY   = 'dl_level'
@@ -23,7 +25,7 @@ const LEVEL_LABELS: Record<JLPTLevel, string> = {
   A2: 'Elemental',
 }
 
-type Tab = 'lesson' | 'stroke'
+type Tab = 'lesson' | 'cards' | 'stroke'
 
 export function LessonPanel() {
   const [tab, setTab]           = useState<Tab>('lesson')
@@ -54,7 +56,9 @@ export function LessonPanel() {
         body:    JSON.stringify({ level, exclude: dialogue?.frase_completa_jp }),
       })
       if (!res.ok) throw new Error()
-      setDialogue(await res.json())
+      const data = await res.json()
+      addVocab(data.vocabulario_desglosado)
+      setDialogue(data)
     } catch {
       setError('No se pudo generar el diálogo. Comprueba tu API key.')
     } finally {
@@ -104,7 +108,7 @@ export function LessonPanel() {
 
       {/* ─── Pestañas ─── */}
       <div className="flex" style={{ borderBottom: '1px solid var(--border)' }}>
-        {([['lesson', 'Lección'], ['stroke', 'Trazos']] as [Tab, string][]).map(([t, label]) => (
+        {([['lesson', 'Lección'], ['cards', 'Tarjetas'], ['stroke', 'Trazos']] as [Tab, string][]).map(([t, label]) => (
           <button key={t} onClick={() => setTab(t)} className="px-5 py-3 text-sm font-semibold relative transition-colors" style={{ color: tab === t ? 'var(--text)' : 'var(--muted)' }}>
             {label}
             {tab === t && <span className="absolute bottom-0 left-5 right-5 h-[2px]" style={{ background: 'var(--amber)', borderRadius: '2px 2px 0 0' }} />}
@@ -193,6 +197,12 @@ export function LessonPanel() {
               <span className="text-[11px] tracking-[0.2em] uppercase">{loading ? 'Cargando...' : 'Ver otra frase'}</span>
               <span className="text-base group-hover:translate-x-1 transition-transform inline-block">→</span>
             </button>
+          </div>
+        )}
+
+        {tab === 'cards' && (
+          <div key="cards" className="fade-up">
+            <FlashcardDeck />
           </div>
         )}
 
