@@ -1,11 +1,31 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import A1 from '@/lib/dialogues/A1.json'
+import A2 from '@/lib/dialogues/A2.json'
 
-interface Props {
-  character: string
+/* ── Índice de vocabulario conocido ── */
+type Entry = { vocabulario_desglosado: { forma: string; lectura: string; significado: string }[] }
+
+const VOCAB_INDEX = ([...A1, ...A2] as Entry[])
+  .flatMap(d => d.vocabulario_desglosado)
+  .filter((v, i, arr) => arr.findIndex(x => x.forma === v.forma) === i)
+
+function searchBySpanish(q: string) {
+  if (q.trim().length < 2) return []
+  const lower = q.toLowerCase()
+  return VOCAB_INDEX.filter(v =>
+    v.significado.toLowerCase().includes(lower) ||
+    v.lectura.toLowerCase().includes(lower)
+  ).slice(0, 6)
 }
 
+/* Si el texto es solo caracteres latinos (el usuario escribe en español) */
+function isLatinInput(text: string): boolean {
+  return text.trim().length >= 2 && !/[぀-ゟ゠-ヿ一-鿿]/.test(text)
+}
+
+/* ── KanjiVG ── */
 function getKanjiVGUrl(char: string): string | null {
   const cp = char.codePointAt(0)
   if (!cp) return null
@@ -30,6 +50,7 @@ interface CharState {
   error: boolean
 }
 
+/* ── Trazo animado con tema ámbar ── */
 function AnimatedStroke({ svgContent, char }: { svgContent: string; char: string }) {
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -45,22 +66,16 @@ function AnimatedStroke({ svgContent, char }: { svgContent: string; char: string
     svg.setAttribute('height', '120')
     svg.setAttribute('viewBox', '0 0 109 109')
 
-    const strokeGroup = svg.querySelector('[id^="kvg:StrokePaths"]')
-    if (strokeGroup) {
-      (strokeGroup as SVGElement).style.stroke = '#a78bfa'
-      ;(strokeGroup as SVGElement).style.strokeWidth = '4'
-    }
-
     const paths = Array.from(svg.querySelectorAll('path'))
     paths.forEach(path => {
       const len = (path as SVGPathElement).getTotalLength?.() ?? 200
-      path.style.strokeDasharray = `${len}`
+      path.style.strokeDasharray  = `${len}`
       path.style.strokeDashoffset = `${len}`
-      path.style.fill = 'none'
-      path.style.stroke = '#a78bfa'
-      path.style.strokeLinecap = 'round'
-      path.style.strokeLinejoin = 'round'
-      path.style.strokeWidth = '4'
+      path.style.fill             = 'none'
+      path.style.stroke           = '#c47d17'
+      path.style.strokeLinecap    = 'round'
+      path.style.strokeLinejoin   = 'round'
+      path.style.strokeWidth      = '4'
     })
 
     container.innerHTML = ''
@@ -71,38 +86,33 @@ function AnimatedStroke({ svgContent, char }: { svgContent: string; char: string
       const len = (path as SVGPathElement).getTotalLength?.() ?? 200
       const duration = Math.max(400, len * 4)
       setTimeout(() => {
-        path.style.transition = `stroke-dashoffset ${duration}ms ease-in-out`
+        path.style.transition       = `stroke-dashoffset ${duration}ms ease-in-out`
         path.style.strokeDashoffset = '0'
       }, delay)
       delay += duration + 100
     })
   }, [svgContent])
 
-  return (
-    <div
-      ref={containerRef}
-      className="w-[120px] h-[120px] flex items-center justify-center"
-      title={char}
-    />
-  )
+  return <div ref={containerRef} className="w-[120px] h-[120px] flex items-center justify-center" title={char} />
 }
 
+/* ── Componente principal ── */
 export function StrokeAnimator() {
-  const [input, setInput] = useState('')
+  const [input, setInput]       = useState('')
   const [submitted, setSubmitted] = useState('')
-  const [chars, setChars] = useState<CharState[]>([])
+  const [chars, setChars]       = useState<CharState[]>([])
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    const text = input.trim()
-    if (!text) return
-    setSubmitted(text)
+  const suggestions = isLatinInput(input) ? searchBySpanish(input) : []
+  const showButton  = input.trim().length > 0 && !isLatinInput(input)
 
-    const charList: CharState[] = [...text].map(c => ({
-      char: c,
-      svgContent: null,
-      loading: isKanji(c),
-      error: false,
+  async function animate(text: string) {
+    const clean = text.trim()
+    if (!clean) return
+    setInput(clean)
+    setSubmitted(clean)
+
+    const charList: CharState[] = [...clean].map(c => ({
+      char: c, svgContent: null, loading: isKanji(c), error: false,
     }))
     setChars(charList)
 
@@ -116,7 +126,7 @@ export function StrokeAnimator() {
       }
       try {
         const res = await fetch(url)
-        if (!res.ok) throw new Error('Not found')
+        if (!res.ok) throw new Error()
         const svg = await res.text()
         setChars(prev => prev.map((x, idx) => idx === i ? { ...x, svgContent: svg, loading: false } : x))
       } catch {
@@ -125,62 +135,149 @@ export function StrokeAnimator() {
     }
   }
 
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    animate(input)
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
+
+      {/* ── Input ── */}
       <form onSubmit={handleSubmit} className="flex gap-2">
         <input
           type="text"
           value={input}
-          onChange={e => setInput(e.target.value)}
-          placeholder="日本語を入力... (p.ej: 漢字, 日本語)"
-          className="flex-1 bg-[#12121a] border border-[#2d2d44] rounded-xl px-4 py-2.5 text-slate-200 text-sm placeholder-slate-600 focus:outline-none focus:border-[#7c3aed]/60 transition-colors"
-          style={{ fontFamily: "'Noto Sans JP', sans-serif" }}
+          onChange={e => { setInput(e.target.value); if (chars.length) setChars([]) }}
+          placeholder="日本語 o escribe en español para buscar..."
+          className="jp flex-1 px-4 py-2.5 text-sm transition-colors"
+          style={{
+            background:   'var(--surface)',
+            border:       '1px solid var(--border)',
+            borderRadius:  3,
+            color:        'var(--text)',
+            outline:      'none',
+          }}
+          onFocus={e  => (e.currentTarget.style.borderColor = 'var(--amber)')}
+          onBlur={e   => (e.currentTarget.style.borderColor = 'var(--border)')}
         />
-        <button
-          type="submit"
-          className="px-4 py-2 rounded-xl bg-[#7c3aed] text-white text-sm font-medium hover:bg-[#6d28d9] active:scale-95 transition-all"
-        >
-          Animar
-        </button>
+        {showButton && (
+          <button
+            type="submit"
+            className="px-4 py-2 text-sm font-bold transition-all"
+            style={{
+              background:   'var(--amber)',
+              color:        '#0d0b08',
+              borderRadius:  3,
+              letterSpacing: '0.05em',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'var(--amber-l)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'var(--amber)')}
+          >
+            Animar →
+          </button>
+        )}
       </form>
 
-      {chars.length > 0 && (
-        <div className="flex flex-wrap gap-4 justify-center">
-          {chars.map((cs, i) => (
-            <div key={i} className="flex flex-col items-center gap-2">
-              {isKanji(cs.char) ? (
-                <div className="w-[120px] h-[120px] bg-[#12121a] border border-[#2d2d44] rounded-xl flex items-center justify-center overflow-hidden">
-                  {cs.loading && (
-                    <div className="w-6 h-6 border-2 border-[#7c3aed] border-t-transparent rounded-full animate-spin" />
-                  )}
-                  {cs.error && (
-                    <span className="text-slate-500 text-xs text-center px-2">Sin datos para este kanji</span>
-                  )}
-                  {cs.svgContent && <AnimatedStroke svgContent={cs.svgContent} char={cs.char} />}
-                </div>
-              ) : (
-                <div className="w-[120px] h-[120px] bg-[#12121a] border border-[#2d2d44]/50 rounded-xl flex items-center justify-center">
-                  <span
-                    className={`text-5xl ${isKana(cs.char) ? 'text-[#a78bfa]' : 'text-slate-400'}`}
-                    style={{ fontFamily: "'Noto Sans JP', sans-serif" }}
-                  >
-                    {cs.char}
-                  </span>
-                </div>
-              )}
-              <span className="text-xs text-slate-500" style={{ fontFamily: "'Noto Sans JP', sans-serif" }}>
-                {cs.char}
-              </span>
-            </div>
-          ))}
+      {/* ── Sugerencias por español ── */}
+      {suggestions.length > 0 && (
+        <div>
+          <p className="text-[8px] tracking-[0.3em] uppercase mb-2.5" style={{ color: 'var(--muted)' }}>
+            Vocabulario que has visto
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {suggestions.map((v, i) => (
+              <button
+                key={i}
+                onClick={() => animate(v.forma)}
+                className="vocab-card text-left px-3 py-3 transition-all"
+                style={{
+                  background:   'var(--surface)',
+                  border:       '1px solid var(--border)',
+                  borderLeft:   '2px solid var(--amber)',
+                  borderRadius:  3,
+                }}
+              >
+                <p className="text-[8px] tracking-widest mb-0.5" style={{ color: 'var(--muted)' }}>
+                  {v.lectura}
+                </p>
+                <p className="jp font-bold text-xl leading-none mb-1.5" style={{ color: 'var(--amber)' }}>
+                  {v.forma}
+                </p>
+                <p className="text-[10px] leading-snug" style={{ color: 'var(--text)', opacity: 0.7 }}>
+                  {v.significado}
+                </p>
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
-      {!submitted && (
-        <p className="text-center text-slate-600 text-sm">
-          Introduce un kanji, palabra o frase para ver el orden de trazos animado
+      {/* ── Sin resultados ── */}
+      {isLatinInput(input) && suggestions.length === 0 && (
+        <p className="text-xs text-center py-4" style={{ color: 'var(--muted)' }}>
+          No hay vocabulario coincidente en tu historial de estudio.
         </p>
       )}
+
+      {/* ── Animación de trazos ── */}
+      {chars.length > 0 && (
+        <div>
+          <p className="text-[8px] tracking-[0.3em] uppercase mb-3" style={{ color: 'var(--muted)' }}>
+            {submitted}
+          </p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            {chars.map((cs, i) => (
+              <div key={i} className="flex flex-col items-center gap-2">
+                <div
+                  className="w-[120px] h-[120px] flex items-center justify-center overflow-hidden"
+                  style={{
+                    background:   'var(--surface)',
+                    border:       '1px solid var(--border)',
+                    borderRadius:  3,
+                  }}
+                >
+                  {isKanji(cs.char) ? (
+                    <>
+                      {cs.loading && (
+                        <div
+                          className="w-5 h-5 rounded-full border-2 border-t-transparent animate-spin"
+                          style={{ borderColor: 'var(--amber)', borderTopColor: 'transparent' }}
+                        />
+                      )}
+                      {cs.error && (
+                        <span className="text-xs text-center px-3 leading-snug" style={{ color: 'var(--muted)' }}>
+                          Sin datos para este kanji
+                        </span>
+                      )}
+                      {cs.svgContent && <AnimatedStroke svgContent={cs.svgContent} char={cs.char} />}
+                    </>
+                  ) : (
+                    <span
+                      className="jp text-5xl"
+                      style={{ color: isKana(cs.char) ? 'var(--amber)' : 'var(--text)' }}
+                    >
+                      {cs.char}
+                    </span>
+                  )}
+                </div>
+                <span className="jp text-xs" style={{ color: 'var(--muted)' }}>
+                  {cs.char}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Placeholder vacío ── */}
+      {!submitted && chars.length === 0 && suggestions.length === 0 && !isLatinInput(input) && (
+        <p className="text-center text-sm py-8" style={{ color: 'var(--muted)' }}>
+          Escribe en japonés para ver los trazos animados,<br />
+          o en español para buscar vocabulario conocido.
+        </p>
+      )}
+
     </div>
   )
 }
