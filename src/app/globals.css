@@ -152,6 +152,28 @@ body::after {
 }
 
 /* Desktop: prevent unreadable micro-text */
+/* WordPopup: bottom sheet en móvil, tooltip encima en desktop */
+@media (max-width: 767px) {
+  .word-popup-wrap {
+    position: fixed !important;
+    inset: auto 0 0 0 !important;
+    transform: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    z-index: 200 !important;
+    pointer-events: auto !important;
+  }
+  .word-popup-card {
+    border-radius: 16px 16px 0 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+    width: 100% !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .word-popup-arrow { display: none !important; }
+}
+
 @media (min-width: 768px) {
   p, span, button, label { font-size: max(var(--fs-override, 0px), inherit); }
   .text-\[8px\]  { font-size: 11px !important; }
