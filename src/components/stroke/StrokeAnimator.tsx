@@ -94,8 +94,8 @@ function AnimatedStroke({ svgContent, char, speed, replayKey }: {
     // Segundo reflow para que el dashoffset=len quede pintado
     void container.getBoundingClientRect()
 
-    const strokeMs = speed === 'slow' ? 2400 : 350
-    const gapMs    = speed === 'slow' ? 600  : 60
+    const strokeMs = speed === 'slow' ? 900 : 350
+    const gapMs    = speed === 'slow' ? 200 : 60
 
     const timers: ReturnType<typeof setTimeout>[] = []
     let delay = 0
