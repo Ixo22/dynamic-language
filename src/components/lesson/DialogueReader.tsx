@@ -170,27 +170,24 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
             <span className="jp text-[10px]" style={{ color: 'var(--muted)', opacity: 0.35 }}>語彙</span>
           </div>
           {shuffledVocab.map((v, i) => {
-            const idx      = tokens.findIndex(t => t.vocab?.forma === v.forma)
-            const isActive = activeIdx === idx
-            const isShown  = revealedSet.has(v.forma)
+            const isShown = revealedSet.has(v.forma)
 
             return (
               <div key={v.forma} className="vocab-card pop-in mb-2" style={{
-                background: isActive ? 'rgba(196,125,23,0.04)' : 'var(--surface)',
+                background: 'var(--surface)',
                 border: '1px solid var(--border)',
-                borderLeft: `3px solid ${isActive ? 'var(--amber-l)' : 'var(--amber)'}`,
+                borderLeft: '3px solid var(--amber)',
                 borderRadius: 3,
                 animationDelay: `${i * 55}ms`,
               }}>
-                {/* Zona superior — enlaza con la frase */}
-                <button
-                  onClick={(e) => { e.stopPropagation(); setActiveIdx(isActive ? null : idx) }}
-                  className="w-full flex items-center gap-3 px-4 pt-3 pb-3 text-left"
+                {/* Zona superior — solo lectura */}
+                <div
+                  className="w-full flex items-center gap-3 px-4 pt-3 pb-3"
                   style={{ borderBottom: '1px solid var(--border)' }}
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-[8px] tracking-[0.2em] mb-1" style={{ color: 'var(--muted)' }}>{v.lectura}</p>
-                    <p className="jp font-bold text-xl leading-none" style={{ color: isActive ? 'var(--amber-l)' : 'var(--amber)' }}>{v.forma}</p>
+                    <p className="jp font-bold text-xl leading-none" style={{ color: 'var(--amber)' }}>{v.forma}</p>
                   </div>
                   <span aria-hidden className="shrink-0 select-none" style={{
                     fontSize: '2.8rem', fontWeight: 900, lineHeight: 1,
@@ -198,10 +195,10 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
                   }}>
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <div onClick={(e) => e.stopPropagation()} className="shrink-0">
+                  <div className="shrink-0">
                     <VocabAudioBtn forma={v.forma} visible={showAudio} />
                   </div>
-                </button>
+                </div>
 
                 {/* Zona inferior — reveal del significado */}
                 {isShown ? (
