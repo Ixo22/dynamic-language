@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { VocabItem } from '@/lib/types'
 
@@ -83,9 +83,26 @@ function CardContent({ vocab, onClose, showAudio }: Props) {
 }
 
 export function WordPopup({ vocab, onClose, showAudio }: Props) {
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  const isMobile    = typeof window !== 'undefined' && window.innerWidth < 768
+  const touchStartY = useRef(0)
+  const [dragY, setDragY]         = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
 
-  /* ── MÓVIL: portal centrado, por encima del navbar ── */
+  function onTouchStart(e: React.TouchEvent) {
+    touchStartY.current = e.touches[0].clientY
+    setIsDragging(true)
+  }
+  function onTouchMove(e: React.TouchEvent) {
+    const delta = e.touches[0].clientY - touchStartY.current
+    if (delta > 0) setDragY(delta)
+  }
+  function onTouchEnd() {
+    setIsDragging(false)
+    if (dragY > 72) onClose()
+    else setDragY(0)
+  }
+
+  /* ── MÓVIL: portal centrado con swipe-down para cerrar ── */
   if (isMobile) {
     return createPortal(
       <>
@@ -94,14 +111,22 @@ export function WordPopup({ vocab, onClose, showAudio }: Props) {
           style={{ position: 'fixed', inset: 0, zIndex: 9998, background: 'rgba(0,0,0,0.6)' }}
           onClick={e => { e.stopPropagation(); onClose() }}
         />
-        {/* Card centrado horizontalmente, justo debajo del navbar (56px) */}
-        <div style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          zIndex: 9999,
-        }}>
+        {/* Card con drag */}
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: `translate(-50%, calc(-50% + ${dragY}px))`,
+            transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.16,1,0.3,1)',
+            opacity: Math.max(0, 1 - dragY / 180),
+            zIndex: 9999,
+            touchAction: 'none',
+          }}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           <CardContent vocab={vocab} onClose={onClose} showAudio={showAudio} />
         </div>
       </>,
