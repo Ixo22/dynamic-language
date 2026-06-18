@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { getVocab, getVocabSRS, updateVocabSRS, StoredVocab, VocabSRS } from '@/lib/vocab-store'
+import { getVocab, getVocabSRS, updateVocabSRS, removeVocab, StoredVocab, VocabSRS } from '@/lib/vocab-store'
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr]
@@ -30,10 +30,11 @@ const SLIDE_CLASS: Record<SlideDir, string> = {
 }
 
 /* ── Tarjeta individual con flip 3D y tilt por ratón ── */
-function FlashCard({ card, slideDir, onResult }: {
+function FlashCard({ card, slideDir, onResult, onDelete }: {
   card:     StoredVocab
   slideDir: SlideDir
   onResult: (remembered: boolean) => void
+  onDelete: () => void
 }) {
   const [flipped, setFlipped] = useState(false)
   const [tilt, setTilt]       = useState({ x: 0, y: 0 })
@@ -49,6 +50,15 @@ function FlashCard({ card, slideDir, onResult }: {
   }
 
   const isTilting = tilt.x !== 0 || tilt.y !== 0
+
+  const levelBadge = card.level ? (
+    <span style={{
+      position: 'absolute', top: 10, right: 10,
+      fontSize: 7, letterSpacing: '0.2em', textTransform: 'uppercase',
+      padding: '2px 6px', fontWeight: 700,
+      background: 'rgba(196,125,23,0.12)', color: 'var(--amber)', borderRadius: 2,
+    }}>{card.level}</span>
+  ) : null
 
   return (
     <>
@@ -78,6 +88,7 @@ function FlashCard({ card, slideDir, onResult }: {
             display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center', gap: 10, padding: '28px 24px',
           }}>
+            {levelBadge}
             <p className="text-[7px] tracking-[0.35em] uppercase" style={{ color: 'var(--muted)' }}>日本語</p>
             <p className="jp font-black leading-none text-center"
               style={{ fontSize: 'clamp(3rem, 14vw, 4.5rem)', color: 'var(--amber)' }}>
@@ -99,6 +110,14 @@ function FlashCard({ card, slideDir, onResult }: {
             alignItems: 'center', justifyContent: 'center', gap: 12, padding: '28px 24px',
             transform: 'rotateY(180deg)',
           }}>
+            {card.level && (
+              <span style={{
+                position: 'absolute', top: 10, right: 10,
+                fontSize: 7, letterSpacing: '0.2em', textTransform: 'uppercase',
+                padding: '2px 6px', fontWeight: 700,
+                background: 'rgba(196,125,23,0.12)', color: 'var(--amber)', borderRadius: 2,
+              }}>{card.level}</span>
+            )}
             <p className="text-[7px] tracking-[0.35em] uppercase" style={{ color: 'var(--amber)', opacity: 0.7 }}>Significado</p>
             <p className="jp font-bold" style={{ fontSize: 20, color: 'var(--amber)', opacity: 0.8 }}>{card.forma}</p>
             <p className="font-semibold text-center leading-snug"
@@ -132,6 +151,7 @@ function FlashCard({ card, slideDir, onResult }: {
           </button>
         </div>
       )}
+
     </>
   )
 }
@@ -163,6 +183,17 @@ export function FlashcardDeck() {
     const next = updateVocabSRS(deck[idx].forma, remembered)
     setLastResult({ days: next.interval_days })
     advance('right')
+  }
+
+  function handleDelete() {
+    removeVocab(deck[idx].forma)
+    const newDeck = deck.filter((_, i) => i !== idx)
+    if (newDeck.length === 0) { setDeck([]); return }
+    setDeck(newDeck)
+    setIdx(i => Math.min(i, newDeck.length - 1))
+    setCardKey(k => k + 1)
+    setSlideDir('up')
+    setLastResult(null)
   }
 
   function goNext() { setLastResult(null); advance('right') }
@@ -224,7 +255,7 @@ export function FlashcardDeck() {
       )}
 
       {/* Tarjeta — key fuerza remount al cambiar → flipped siempre empieza en false */}
-      <FlashCard key={cardKey} card={deck[idx]} slideDir={slideDir} onResult={handleResult} />
+      <FlashCard key={cardKey} card={deck[idx]} slideDir={slideDir} onResult={handleResult} onDelete={handleDelete} />
 
       {/* Navegación manual */}
       <div className="flex items-center justify-between w-full max-w-sm pt-1">
@@ -241,6 +272,17 @@ export function FlashcardDeck() {
           onMouseLeave={e => (e.currentTarget.style.background = 'var(--amber)')}
         >Siguiente →</button>
       </div>
+
+      {/* Eliminar tarjeta */}
+      <button
+        onClick={handleDelete}
+        className="w-full max-w-sm py-2.5 text-xs font-semibold transition-all"
+        style={{ border: '1px solid var(--border)', borderRadius: 3, color: 'var(--muted)', background: 'transparent' }}
+        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--red)'; e.currentTarget.style.color = 'var(--red)'; e.currentTarget.style.background = 'rgba(158,50,34,0.06)' }}
+        onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--muted)'; e.currentTarget.style.background = 'transparent' }}
+      >
+        × Quitar esta tarjeta
+      </button>
 
     </div>
   )

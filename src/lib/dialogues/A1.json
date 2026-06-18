@@ -15,8 +15,7 @@
     "frase_es": "¿A dónde vas?",
     "vocabulario_desglosado": [
       { "forma": "どこ", "lectura": "どこ", "significado": "Dónde" },
-      { "forma": "行く", "lectura": "いく", "significado": "Ir" },
-      { "forma": "の", "lectura": "の", "significado": "Partícula de pregunta informal" }
+      { "forma": "行く", "lectura": "いく", "significado": "Ir" }
     ]
   },
   {
@@ -204,8 +203,7 @@
     "frase_es": "¡Me da miedo! ¡Para ya!",
     "vocabulario_desglosado": [
       { "forma": "こわい", "lectura": "こわい", "significado": "Aterrador / da miedo" },
-      { "forma": "やめて", "lectura": "やめて", "significado": "Para / deja de hacerlo" },
-      { "forma": "よ", "lectura": "よ", "significado": "Partícula de énfasis (queja ligera)" }
+      { "forma": "やめて", "lectura": "やめて", "significado": "Para / deja de hacerlo" }
     ]
   },
   {
@@ -215,7 +213,7 @@
     "vocabulario_desglosado": [
       { "forma": "ちょっと", "lectura": "ちょっと", "significado": "Un momento / un poco" },
       { "forma": "手伝って", "lectura": "てつだって", "significado": "Ayudar (petición)" },
-      { "forma": "くれる", "lectura": "くれる", "significado": "¿Puedes darme / hacerme? (favor)" }
+      { "forma": "くれる", "lectura": "くれる", "significado": "¿Puedes hacerme? (favor)" }
     ]
   },
   {
@@ -235,6 +233,687 @@
       { "forma": "最新話", "lectura": "さいしんわ", "significado": "Último capítulo / episodio más reciente" },
       { "forma": "もう", "lectura": "もう", "significado": "Ya" },
       { "forma": "見た", "lectura": "みた", "significado": "Vi / viste (pasado)" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando el precio de algo en una tienda.",
+    "frase_completa_jp": "これ、いくらですか？",
+    "frase_es": "¿Cuánto cuesta esto?",
+    "vocabulario_desglosado": [
+      { "forma": "これ", "lectura": "これ", "significado": "Esto" },
+      { "forma": "いくら", "lectura": "いくら", "significado": "¿Cuánto? / ¿Cuánto cuesta?" }
+    ]
+  },
+  {
+    "contexto_escena": "Pidiendo algo en un restaurante al camarero.",
+    "frase_completa_jp": "すみません！これをください。",
+    "frase_es": "¡Disculpe! Esto, por favor.",
+    "vocabulario_desglosado": [
+      { "forma": "すみません", "lectura": "すみません", "significado": "Disculpe / perdón" },
+      { "forma": "これ", "lectura": "これ", "significado": "Esto" },
+      { "forma": "ください", "lectura": "ください", "significado": "Por favor (deme)" }
+    ]
+  },
+  {
+    "contexto_escena": "En el tren preguntando cuál es la próxima parada.",
+    "frase_completa_jp": "次の駅はどこですか？",
+    "frase_es": "¿Cuál es la siguiente estación?",
+    "vocabulario_desglosado": [
+      { "forma": "次", "lectura": "つぎ", "significado": "El siguiente / el próximo" },
+      { "forma": "駅", "lectura": "えき", "significado": "Estación de tren" },
+      { "forma": "どこ", "lectura": "どこ", "significado": "Dónde" }
+    ]
+  },
+  {
+    "contexto_escena": "Comprando un billete en la taquilla.",
+    "frase_completa_jp": "一枚ください。",
+    "frase_es": "Un billete, por favor.",
+    "vocabulario_desglosado": [
+      { "forma": "一枚", "lectura": "いちまい", "significado": "Una hoja / un billete (contador)" },
+      { "forma": "ください", "lectura": "ください", "significado": "Por favor (deme)" }
+    ]
+  },
+  {
+    "contexto_escena": "Pidiendo agua en un restaurante.",
+    "frase_completa_jp": "水をください。",
+    "frase_es": "Agua, por favor.",
+    "vocabulario_desglosado": [
+      { "forma": "水", "lectura": "みず", "significado": "Agua" },
+      { "forma": "ください", "lectura": "ください", "significado": "Por favor (deme)" }
+    ]
+  },
+  {
+    "contexto_escena": "Hace mucho calor y pides que enciendan el aire acondicionado.",
+    "frase_completa_jp": "暑い！クーラーつけて！",
+    "frase_es": "¡Qué calor! ¡Pon el aire acondicionado!",
+    "vocabulario_desglosado": [
+      { "forma": "暑い", "lectura": "あつい", "significado": "Caluroso / hace calor" },
+      { "forma": "クーラー", "lectura": "クーラー", "significado": "Aire acondicionado" },
+      { "forma": "つけて", "lectura": "つけて", "significado": "Enciéndelo / ponlo (petición)" }
+    ]
+  },
+  {
+    "contexto_escena": "Comentando el buen tiempo con alguien.",
+    "frase_completa_jp": "今日、いい天気だね。",
+    "frase_es": "Hoy hace buen tiempo, ¿verdad?",
+    "vocabulario_desglosado": [
+      { "forma": "今日", "lectura": "きょう", "significado": "Hoy" },
+      { "forma": "いい", "lectura": "いい", "significado": "Bueno / bien" },
+      { "forma": "天気", "lectura": "てんき", "significado": "Tiempo / clima" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si alguien tiene planes para el fin de semana.",
+    "frase_completa_jp": "週末、暇？",
+    "frase_es": "¿Tienes tiempo libre este fin de semana?",
+    "vocabulario_desglosado": [
+      { "forma": "週末", "lectura": "しゅうまつ", "significado": "Fin de semana" },
+      { "forma": "暇", "lectura": "ひま", "significado": "Tiempo libre / sin planes" }
+    ]
+  },
+  {
+    "contexto_escena": "Proponiendo jugar videojuegos juntos.",
+    "frase_completa_jp": "ゲームしよう！",
+    "frase_es": "¡Juguemos a videojuegos!",
+    "vocabulario_desglosado": [
+      { "forma": "ゲーム", "lectura": "ゲーム", "significado": "Videojuego / juego" },
+      { "forma": "しよう", "lectura": "しよう", "significado": "¡Hagámoslo! / ¡Vamos a...!" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si alguien es bueno en fútbol.",
+    "frase_completa_jp": "サッカー、得意？",
+    "frase_es": "¿Se te da bien el fútbol?",
+    "vocabulario_desglosado": [
+      { "forma": "サッカー", "lectura": "サッカー", "significado": "Fútbol" },
+      { "forma": "得意", "lectura": "とくい", "significado": "Ser bueno en algo / punto fuerte" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando qué música escucha alguien.",
+    "frase_completa_jp": "何の音楽聴いてるの？",
+    "frase_es": "¿Qué música estás escuchando?",
+    "vocabulario_desglosado": [
+      { "forma": "何", "lectura": "なに", "significado": "Qué" },
+      { "forma": "音楽", "lectura": "おんがく", "significado": "Música" },
+      { "forma": "聴いてる", "lectura": "きいてる", "significado": "Estás escuchando" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si alguien ya se levantó.",
+    "frase_completa_jp": "もう起きた？",
+    "frase_es": "¿Ya te levantaste?",
+    "vocabulario_desglosado": [
+      { "forma": "もう", "lectura": "もう", "significado": "Ya" },
+      { "forma": "起きた", "lectura": "おきた", "significado": "Se levantó / se despertó (pasado)" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando a qué hora durmió alguien la noche anterior.",
+    "frase_completa_jp": "昨日、何時に寝た？",
+    "frase_es": "¿A qué hora te dormiste ayer?",
+    "vocabulario_desglosado": [
+      { "forma": "昨日", "lectura": "きのう", "significado": "Ayer" },
+      { "forma": "何時", "lectura": "なんじ", "significado": "Qué hora / a qué hora" },
+      { "forma": "寝た", "lectura": "ねた", "significado": "Dormí / se durmió (pasado)" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si alguien tiene hermanos.",
+    "frase_completa_jp": "兄弟、いる？",
+    "frase_es": "¿Tienes hermanos?",
+    "vocabulario_desglosado": [
+      { "forma": "兄弟", "lectura": "きょうだい", "significado": "Hermanos / hermanas" },
+      { "forma": "いる", "lectura": "いる", "significado": "Hay / existe (personas y animales)" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si alguien tiene un perro.",
+    "frase_completa_jp": "犬、飼ってる？",
+    "frase_es": "¿Tienes un perro?",
+    "vocabulario_desglosado": [
+      { "forma": "犬", "lectura": "いぬ", "significado": "Perro" },
+      { "forma": "飼ってる", "lectura": "かってる", "significado": "Tienes / estás criando (mascota)" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando qué comida le gusta a alguien.",
+    "frase_completa_jp": "食べ物、何が好き？",
+    "frase_es": "¿Qué comida te gusta?",
+    "vocabulario_desglosado": [
+      { "forma": "食べ物", "lectura": "たべもの", "significado": "Comida / alimento" },
+      { "forma": "何", "lectura": "なに", "significado": "Qué" },
+      { "forma": "好き", "lectura": "すき", "significado": "Gustar / favorito" }
+    ]
+  },
+  {
+    "contexto_escena": "Haciendo un cumplido sobre algo que lleva alguien.",
+    "frase_completa_jp": "それ、かわいい！",
+    "frase_es": "¡Eso es muy mono!",
+    "vocabulario_desglosado": [
+      { "forma": "それ", "lectura": "それ", "significado": "Eso" },
+      { "forma": "かわいい", "lectura": "かわいい", "significado": "Mono / adorable / lindo" }
+    ]
+  },
+  {
+    "contexto_escena": "Dando las gracias a alguien que te ayudó.",
+    "frase_completa_jp": "ありがとう！助かった！",
+    "frase_es": "¡Gracias! ¡Me salvaste!",
+    "vocabulario_desglosado": [
+      { "forma": "ありがとう", "lectura": "ありがとう", "significado": "Gracias (informal)" },
+      { "forma": "助かった", "lectura": "たすかった", "significado": "Me salvaste / me ayudaste mucho" }
+    ]
+  },
+  {
+    "contexto_escena": "Diciéndole a alguien que te llame más tarde.",
+    "frase_completa_jp": "後で電話して。",
+    "frase_es": "Llámame luego.",
+    "vocabulario_desglosado": [
+      { "forma": "後で", "lectura": "あとで", "significado": "Después / más tarde" },
+      { "forma": "電話", "lectura": "でんわ", "significado": "Teléfono / llamada" },
+      { "forma": "して", "lectura": "して", "significado": "Haz (petición)" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si alguien vio tus historias en redes sociales.",
+    "frase_completa_jp": "インスタ見た？",
+    "frase_es": "¿Viste mi Instagram?",
+    "vocabulario_desglosado": [
+      { "forma": "インスタ", "lectura": "インスタ", "significado": "Instagram" },
+      { "forma": "見た", "lectura": "みた", "significado": "Vi / viste (pasado)" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando cuándo es el cumpleaños de alguien.",
+    "frase_completa_jp": "誕生日、いつ？",
+    "frase_es": "¿Cuándo es tu cumpleaños?",
+    "vocabulario_desglosado": [
+      { "forma": "誕生日", "lectura": "たんじょうび", "significado": "Cumpleaños" },
+      { "forma": "いつ", "lectura": "いつ", "significado": "Cuándo" }
+    ]
+  },
+  {
+    "contexto_escena": "Dándole algo a alguien.",
+    "frase_completa_jp": "これ、どうぞ。",
+    "frase_es": "Toma, esto es para ti.",
+    "vocabulario_desglosado": [
+      { "forma": "これ", "lectura": "これ", "significado": "Esto" },
+      { "forma": "どうぞ", "lectura": "どうぞ", "significado": "Por favor / toma / adelante" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si alguien lee mucho.",
+    "frase_completa_jp": "本、読むの好き？",
+    "frase_es": "¿Te gusta leer?",
+    "vocabulario_desglosado": [
+      { "forma": "本", "lectura": "ほん", "significado": "Libro" },
+      { "forma": "読む", "lectura": "よむ", "significado": "Leer" },
+      { "forma": "好き", "lectura": "すき", "significado": "Gustar" }
+    ]
+  },
+  {
+    "contexto_escena": "Invitando a alguien al cine.",
+    "frase_completa_jp": "映画、見に行かない？",
+    "frase_es": "¿No vamos a ver una película?",
+    "vocabulario_desglosado": [
+      { "forma": "映画", "lectura": "えいが", "significado": "Película / cine" },
+      { "forma": "見に行かない", "lectura": "みにいかない", "significado": "¿No vamos a ver? (invitación)" }
+    ]
+  },
+  {
+    "contexto_escena": "Viendo un precio muy alto en una tienda.",
+    "frase_completa_jp": "高い...もっと安いのない？",
+    "frase_es": "Está caro... ¿No hay algo más barato?",
+    "vocabulario_desglosado": [
+      { "forma": "高い", "lectura": "たかい", "significado": "Caro / alto" },
+      { "forma": "安い", "lectura": "やすい", "significado": "Barato" }
+    ]
+  },
+  {
+    "contexto_escena": "Eligiendo entre dos colores en una tienda.",
+    "frase_completa_jp": "赤と青、どっちがいい？",
+    "frase_es": "¿Cuál prefieres, el rojo o el azul?",
+    "vocabulario_desglosado": [
+      { "forma": "赤", "lectura": "あか", "significado": "Rojo" },
+      { "forma": "青", "lectura": "あお", "significado": "Azul" },
+      { "forma": "どっち", "lectura": "どっち", "significado": "Cuál de los dos" },
+      { "forma": "いい", "lectura": "いい", "significado": "Mejor / preferible" }
+    ]
+  },
+  {
+    "contexto_escena": "Diciendo cuál es tu estación favorita.",
+    "frase_completa_jp": "春が一番好き！",
+    "frase_es": "¡La primavera es la que más me gusta!",
+    "vocabulario_desglosado": [
+      { "forma": "春", "lectura": "はる", "significado": "Primavera" },
+      { "forma": "一番", "lectura": "いちばん", "significado": "El más / el número uno" },
+      { "forma": "好き", "lectura": "すき", "significado": "Favorito / que gusta" }
+    ]
+  },
+  {
+    "contexto_escena": "Diciendo que te duele la cabeza.",
+    "frase_completa_jp": "頭が痛い。",
+    "frase_es": "Me duele la cabeza.",
+    "vocabulario_desglosado": [
+      { "forma": "頭", "lectura": "あたま", "significado": "Cabeza" },
+      { "forma": "痛い", "lectura": "いたい", "significado": "Duele / doloroso" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si alguien tomó la medicina.",
+    "frase_completa_jp": "薬、飲んだ？",
+    "frase_es": "¿Tomaste la medicina?",
+    "vocabulario_desglosado": [
+      { "forma": "薬", "lectura": "くすり", "significado": "Medicina / pastilla" },
+      { "forma": "飲んだ", "lectura": "のんだ", "significado": "Tomé / tomaste (bebida o medicina)" }
+    ]
+  },
+  {
+    "contexto_escena": "En casa, preguntando si ya se cenó.",
+    "frase_completa_jp": "もうご飯食べた？",
+    "frase_es": "¿Ya comiste?",
+    "vocabulario_desglosado": [
+      { "forma": "ご飯", "lectura": "ごはん", "significado": "Arroz / comida / meal" },
+      { "forma": "食べた", "lectura": "たべた", "significado": "Comí / comiste (pasado)" }
+    ]
+  },
+  {
+    "contexto_escena": "Comentando que la habitación de alguien está desordenada.",
+    "frase_completa_jp": "部屋、汚い！",
+    "frase_es": "¡Tu habitación está hecha un desastre!",
+    "vocabulario_desglosado": [
+      { "forma": "部屋", "lectura": "へや", "significado": "Habitación / cuarto" },
+      { "forma": "汚い", "lectura": "きたない", "significado": "Sucio / desordenado" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si alguien ya se duchó o bañó.",
+    "frase_completa_jp": "もうお風呂入った？",
+    "frase_es": "¿Ya te has bañado?",
+    "vocabulario_desglosado": [
+      { "forma": "お風呂", "lectura": "おふろ", "significado": "Baño (bañera japonesa)" },
+      { "forma": "入った", "lectura": "はいった", "significado": "Entré / me bañé (pasado)" }
+    ]
+  },
+  {
+    "contexto_escena": "Confesando que eres malo en matemáticas.",
+    "frase_completa_jp": "数学、苦手なんだよね。",
+    "frase_es": "Las matemáticas se me dan fatal, la verdad.",
+    "vocabulario_desglosado": [
+      { "forma": "数学", "lectura": "すうがく", "significado": "Matemáticas" },
+      { "forma": "苦手", "lectura": "にがて", "significado": "Punto débil / ser malo en algo" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si alguien trajo el almuerzo de casa.",
+    "frase_completa_jp": "お弁当持ってきた？",
+    "frase_es": "¿Trajiste la fiambrera?",
+    "vocabulario_desglosado": [
+      { "forma": "お弁当", "lectura": "おべんとう", "significado": "Bento / fiambrera / almuerzo" },
+      { "forma": "持ってきた", "lectura": "もってきた", "significado": "Traje / trajiste (pasado)" }
+    ]
+  },
+  {
+    "contexto_escena": "Proponiendo comprar algo de beber.",
+    "frase_completa_jp": "飲み物、買う？",
+    "frase_es": "¿Compramos algo de beber?",
+    "vocabulario_desglosado": [
+      { "forma": "飲み物", "lectura": "のみもの", "significado": "Bebida" },
+      { "forma": "買う", "lectura": "かう", "significado": "Comprar" }
+    ]
+  },
+  {
+    "contexto_escena": "Diciéndole a alguien que te has perdido.",
+    "frase_completa_jp": "道に迷った...",
+    "frase_es": "Me he perdido...",
+    "vocabulario_desglosado": [
+      { "forma": "道", "lectura": "みち", "significado": "Calle / camino" },
+      { "forma": "迷った", "lectura": "まよった", "significado": "Me perdí / me confundí" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si alguien quiere ir al convenience store.",
+    "frase_completa_jp": "コンビニ行く？",
+    "frase_es": "¿Vamos al convenience store?",
+    "vocabulario_desglosado": [
+      { "forma": "コンビニ", "lectura": "コンビニ", "significado": "Tienda de conveniencia (24h)" },
+      { "forma": "行く", "lectura": "いく", "significado": "Ir" }
+    ]
+  },
+  {
+    "contexto_escena": "Invitando a alguien a estudiar juntos.",
+    "frase_completa_jp": "一緒に勉強しない？",
+    "frase_es": "¿Estudiamos juntos?",
+    "vocabulario_desglosado": [
+      { "forma": "一緒に", "lectura": "いっしょに", "significado": "Juntos" },
+      { "forma": "勉強", "lectura": "べんきょう", "significado": "Estudio / estudiar" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si alguien quiere picar algo.",
+    "frase_completa_jp": "お菓子食べない？",
+    "frase_es": "¿Comes algo dulce?",
+    "vocabulario_desglosado": [
+      { "forma": "お菓子", "lectura": "おかし", "significado": "Dulces / aperitivos / snacks" },
+      { "forma": "食べない", "lectura": "たべない", "significado": "¿No comes? (invitación)" }
+    ]
+  },
+  {
+    "contexto_escena": "Proponiendo ir al karaoke.",
+    "frase_completa_jp": "カラオケ行きたい！",
+    "frase_es": "¡Quiero ir al karaoke!",
+    "vocabulario_desglosado": [
+      { "forma": "カラオケ", "lectura": "カラオケ", "significado": "Karaoke" },
+      { "forma": "行きたい", "lectura": "いきたい", "significado": "Quiero ir" }
+    ]
+  },
+  {
+    "contexto_escena": "Pidiendo perdón de forma más formal.",
+    "frase_completa_jp": "ごめんなさい、私が悪かった。",
+    "frase_es": "Lo siento, fue culpa mía.",
+    "vocabulario_desglosado": [
+      { "forma": "ごめんなさい", "lectura": "ごめんなさい", "significado": "Lo siento (más formal)" },
+      { "forma": "私", "lectura": "わたし", "significado": "Yo / me" },
+      { "forma": "悪かった", "lectura": "わるかった", "significado": "Estaba equivocado / fue mi culpa" }
+    ]
+  },
+  {
+    "contexto_escena": "Diciéndole a alguien que no se preocupe.",
+    "frase_completa_jp": "いいよ、気にしないで。",
+    "frase_es": "Está bien, no te preocupes.",
+    "vocabulario_desglosado": [
+      { "forma": "いいよ", "lectura": "いいよ", "significado": "Está bien / no pasa nada" },
+      { "forma": "気にしないで", "lectura": "きにしないで", "significado": "No te preocupes / no le des importancia" }
+    ]
+  },
+  {
+    "contexto_escena": "Estando de acuerdo con lo que dice alguien.",
+    "frase_completa_jp": "そうだね、私もそう思う。",
+    "frase_es": "Tienes razón, yo también lo pienso.",
+    "vocabulario_desglosado": [
+      { "forma": "そうだね", "lectura": "そうだね", "significado": "Tienes razón / así es" },
+      { "forma": "私", "lectura": "わたし", "significado": "Yo" },
+      { "forma": "思う", "lectura": "おもう", "significado": "Pensar / creer" }
+    ]
+  },
+  {
+    "contexto_escena": "Reaccionando con sorpresa ante una noticia.",
+    "frase_completa_jp": "えっ、本当に！？",
+    "frase_es": "¿Eh? ¿De verdad?",
+    "vocabulario_desglosado": [
+      { "forma": "本当に", "lectura": "ほんとうに", "significado": "De verdad / en serio" }
+    ]
+  },
+  {
+    "contexto_escena": "Celebrando haber aprobado un examen o conseguido algo.",
+    "frase_completa_jp": "やった！合格した！",
+    "frase_es": "¡Lo conseguí! ¡Lo aprobé!",
+    "vocabulario_desglosado": [
+      { "forma": "やった", "lectura": "やった", "significado": "¡Lo hice! / ¡Yupi!" },
+      { "forma": "合格した", "lectura": "ごうかくした", "significado": "Aprobé / pasé (un examen)" }
+    ]
+  },
+  {
+    "contexto_escena": "Reaccionando con incredulidad ante una mala noticia.",
+    "frase_completa_jp": "えっ、マジで...つらい。",
+    "frase_es": "¿En serio?... Qué duro.",
+    "vocabulario_desglosado": [
+      { "forma": "マジで", "lectura": "マジで", "significado": "En serio / ¿de verdad? (informal)" },
+      { "forma": "つらい", "lectura": "つらい", "significado": "Duro / doloroso / difícil emocionalmente" }
+    ]
+  },
+  {
+    "contexto_escena": "Expresando cansancio al terminar el día.",
+    "frase_completa_jp": "疲れた〜、もう無理。",
+    "frase_es": "Estoy agotado, ya no puedo más.",
+    "vocabulario_desglosado": [
+      { "forma": "疲れた", "lectura": "つかれた", "significado": "Estoy cansado / agotado" },
+      { "forma": "無理", "lectura": "むり", "significado": "Imposible / no puedo más" }
+    ]
+  },
+  {
+    "contexto_escena": "Describiendo que estás relajado sin hacer nada.",
+    "frase_completa_jp": "のんびりしてる。",
+    "frase_es": "Estoy relajado, sin hacer nada.",
+    "vocabulario_desglosado": [
+      { "forma": "のんびり", "lectura": "のんびり", "significado": "Tranquilamente / sin prisa / relajado" },
+      { "forma": "してる", "lectura": "してる", "significado": "Estoy haciendo / estoy siendo" }
+    ]
+  },
+  {
+    "contexto_escena": "Quejándote de que no tienes nada que hacer.",
+    "frase_completa_jp": "暇だ〜、何かしたい。",
+    "frase_es": "Qué aburrimiento, quiero hacer algo.",
+    "vocabulario_desglosado": [
+      { "forma": "暇", "lectura": "ひま", "significado": "Aburrimiento / tiempo libre" },
+      { "forma": "何か", "lectura": "なにか", "significado": "Algo" },
+      { "forma": "したい", "lectura": "したい", "significado": "Quiero hacer" }
+    ]
+  },
+  {
+    "contexto_escena": "Diciendo que estás emocionado por algo que va a pasar.",
+    "frase_completa_jp": "楽しみ！早く来ないかな。",
+    "frase_es": "¡Tengo muchas ganas! Ojalá llegue pronto.",
+    "vocabulario_desglosado": [
+      { "forma": "楽しみ", "lectura": "たのしみ", "significado": "Tener ganas de / ilusión" },
+      { "forma": "早く", "lectura": "はやく", "significado": "Rápido / pronto" }
+    ]
+  },
+  {
+    "contexto_escena": "Expresando preocupación por algo.",
+    "frase_completa_jp": "大丈夫かな、心配だ。",
+    "frase_es": "¿Estará bien? Estoy preocupado.",
+    "vocabulario_desglosado": [
+      { "forma": "大丈夫", "lectura": "だいじょうぶ", "significado": "Bien / está bien / sin problema" },
+      { "forma": "心配", "lectura": "しんぱい", "significado": "Preocupación / estar preocupado" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si alguien tiene planes para mañana.",
+    "frase_completa_jp": "明日、予定ある？",
+    "frase_es": "¿Tienes planes para mañana?",
+    "vocabulario_desglosado": [
+      { "forma": "明日", "lectura": "あした", "significado": "Mañana" },
+      { "forma": "予定", "lectura": "よてい", "significado": "Planes / agenda / horario" }
+    ]
+  },
+  {
+    "contexto_escena": "Proponiendo cancelar algo que tenían planeado.",
+    "frase_completa_jp": "やっぱりやめよっか。",
+    "frase_es": "Al final, ¿lo dejamos?",
+    "vocabulario_desglosado": [
+      { "forma": "やっぱり", "lectura": "やっぱり", "significado": "Al final / como esperaba / después de todo" },
+      { "forma": "やめよっか", "lectura": "やめよっか", "significado": "¿Lo dejamos? / ¿Cancelamos?" }
+    ]
+  },
+  {
+    "contexto_escena": "Indicando cómo llegar a algún sitio.",
+    "frase_completa_jp": "まっすぐ行ってください。",
+    "frase_es": "Por favor, vaya todo recto.",
+    "vocabulario_desglosado": [
+      { "forma": "まっすぐ", "lectura": "まっすぐ", "significado": "Todo recto / en línea recta" },
+      { "forma": "行って", "lectura": "いって", "significado": "Vaya / ve (imperativo)" },
+      { "forma": "ください", "lectura": "ください", "significado": "Por favor (petición)" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si un lugar queda cerca o lejos.",
+    "frase_completa_jp": "ここから近い？遠い？",
+    "frase_es": "¿Está cerca o lejos desde aquí?",
+    "vocabulario_desglosado": [
+      { "forma": "ここから", "lectura": "ここから", "significado": "Desde aquí" },
+      { "forma": "近い", "lectura": "ちかい", "significado": "Cerca / cercano" },
+      { "forma": "遠い", "lectura": "とおい", "significado": "Lejos / lejano" }
+    ]
+  },
+  {
+    "contexto_escena": "Proponiendo ir al parque.",
+    "frase_completa_jp": "公園に行こうよ！",
+    "frase_es": "¡Vamos al parque!",
+    "vocabulario_desglosado": [
+      { "forma": "公園", "lectura": "こうえん", "significado": "Parque" },
+      { "forma": "行こう", "lectura": "いこう", "significado": "Vamos / vayamos" }
+    ]
+  },
+  {
+    "contexto_escena": "Haciendo un cumplido sobre la velocidad de alguien.",
+    "frase_completa_jp": "走るの早い！",
+    "frase_es": "¡Corres muy rápido!",
+    "vocabulario_desglosado": [
+      { "forma": "走る", "lectura": "はしる", "significado": "Correr" },
+      { "forma": "早い", "lectura": "はやい", "significado": "Rápido / veloz" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando a dónde va alguien en las vacaciones de verano.",
+    "frase_completa_jp": "夏休み、どこ行くの？",
+    "frase_es": "¿A dónde vas en las vacaciones de verano?",
+    "vocabulario_desglosado": [
+      { "forma": "夏休み", "lectura": "なつやすみ", "significado": "Vacaciones de verano" },
+      { "forma": "どこ", "lectura": "どこ", "significado": "Dónde" },
+      { "forma": "行く", "lectura": "いく", "significado": "Ir" }
+    ]
+  },
+  {
+    "contexto_escena": "Expresando ganas de viajar al extranjero.",
+    "frase_completa_jp": "旅行したい！海外に行きたい！",
+    "frase_es": "¡Quiero viajar! ¡Quiero ir al extranjero!",
+    "vocabulario_desglosado": [
+      { "forma": "旅行", "lectura": "りょこう", "significado": "Viaje / viajar" },
+      { "forma": "海外", "lectura": "かいがい", "significado": "Extranjero / fuera del país" },
+      { "forma": "行きたい", "lectura": "いきたい", "significado": "Quiero ir" }
+    ]
+  },
+  {
+    "contexto_escena": "Comentando lo difícil que es el japonés.",
+    "frase_completa_jp": "日本語、難しいね。",
+    "frase_es": "El japonés es difícil, ¿verdad?",
+    "vocabulario_desglosado": [
+      { "forma": "日本語", "lectura": "にほんご", "significado": "Idioma japonés" },
+      { "forma": "難しい", "lectura": "むずかしい", "significado": "Difícil" }
+    ]
+  },
+  {
+    "contexto_escena": "Despidiéndose de alguien con quien quizá no te ves hasta mucho tiempo.",
+    "frase_completa_jp": "またいつか会おうね。",
+    "frase_es": "Nos veremos algún día.",
+    "vocabulario_desglosado": [
+      { "forma": "また", "lectura": "また", "significado": "Otra vez / de nuevo" },
+      { "forma": "いつか", "lectura": "いつか", "significado": "Algún día / en algún momento" },
+      { "forma": "会おう", "lectura": "あおう", "significado": "Quedemos / nos vemos (propuesta)" }
+    ]
+  },
+  {
+    "contexto_escena": "Declinando una invitación con una excusa vaga.",
+    "frase_completa_jp": "今日はちょっと...また今度ね。",
+    "frase_es": "Hoy es que... Otro día, ¿vale?",
+    "vocabulario_desglosado": [
+      { "forma": "今日", "lectura": "きょう", "significado": "Hoy" },
+      { "forma": "ちょっと", "lectura": "ちょっと", "significado": "Un poco / (excusa vaga)" },
+      { "forma": "今度", "lectura": "こんど", "significado": "La próxima vez / otro día" }
+    ]
+  },
+  {
+    "contexto_escena": "Cambiando de tema en una conversación.",
+    "frase_completa_jp": "そういえば、聞いた？",
+    "frase_es": "Por cierto, ¿te enteraste?",
+    "vocabulario_desglosado": [
+      { "forma": "そういえば", "lectura": "そういえば", "significado": "Por cierto / hablando de eso" },
+      { "forma": "聞いた", "lectura": "きいた", "significado": "Escuchaste / te enteraste (pasado)" }
+    ]
+  },
+  {
+    "contexto_escena": "Pidiendo que alguien te explique algo.",
+    "frase_completa_jp": "それ、教えて！",
+    "frase_es": "¡Explícame eso!",
+    "vocabulario_desglosado": [
+      { "forma": "それ", "lectura": "それ", "significado": "Eso" },
+      { "forma": "教えて", "lectura": "おしえて", "significado": "Dime / enséñame / explícame" }
+    ]
+  },
+  {
+    "contexto_escena": "Rindiendo porque algo es demasiado difícil.",
+    "frase_completa_jp": "できない...難しすぎる。",
+    "frase_es": "No puedo... Es demasiado difícil.",
+    "vocabulario_desglosado": [
+      { "forma": "できない", "lectura": "できない", "significado": "No puedo / es imposible" },
+      { "forma": "難しすぎる", "lectura": "むずかしすぎる", "significado": "Demasiado difícil" }
+    ]
+  },
+  {
+    "contexto_escena": "Animándote a intentar algo nuevo.",
+    "frase_completa_jp": "やってみる！頑張る！",
+    "frase_es": "¡Lo voy a intentar! ¡A por ello!",
+    "vocabulario_desglosado": [
+      { "forma": "やってみる", "lectura": "やってみる", "significado": "Intentarlo / probar a hacer algo" },
+      { "forma": "頑張る", "lectura": "がんばる", "significado": "Hacer lo mejor / esforzarse" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando dónde se compra el billete en la estación.",
+    "frase_completa_jp": "切符はどこで買えますか？",
+    "frase_es": "¿Dónde puedo comprar el billete?",
+    "vocabulario_desglosado": [
+      { "forma": "切符", "lectura": "きっぷ", "significado": "Billete / ticket de transporte" },
+      { "forma": "どこで", "lectura": "どこで", "significado": "En dónde / dónde" },
+      { "forma": "買えます", "lectura": "かえます", "significado": "Puedo comprar / se puede comprar" }
+    ]
+  },
+  {
+    "contexto_escena": "El autobús llega y hay que darse prisa para subir.",
+    "frase_completa_jp": "バス来た！早く乗って！",
+    "frase_es": "¡Ha llegado el autobús! ¡Sube rápido!",
+    "vocabulario_desglosado": [
+      { "forma": "バス", "lectura": "バス", "significado": "Autobús" },
+      { "forma": "来た", "lectura": "きた", "significado": "Llegó / vino (pasado)" },
+      { "forma": "乗って", "lectura": "のって", "significado": "Sube / monta (petición)" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si puedes dejar el equipaje en algún sitio.",
+    "frase_completa_jp": "ここに荷物置いていい？",
+    "frase_es": "¿Puedo dejar aquí el equipaje?",
+    "vocabulario_desglosado": [
+      { "forma": "ここ", "lectura": "ここ", "significado": "Aquí / este lugar" },
+      { "forma": "荷物", "lectura": "にもつ", "significado": "Equipaje / bolsas / bultos" },
+      { "forma": "置いていい", "lectura": "おいていい", "significado": "¿Está bien dejarlo? / ¿Puedo poner?" }
+    ]
+  },
+  {
+    "contexto_escena": "Preguntando si puedes sentarte en un asiento libre.",
+    "frase_completa_jp": "ここ、座っていい？",
+    "frase_es": "¿Puedo sentarme aquí?",
+    "vocabulario_desglosado": [
+      { "forma": "ここ", "lectura": "ここ", "significado": "Aquí" },
+      { "forma": "座って", "lectura": "すわって", "significado": "Sentado / siéntate" },
+      { "forma": "いい", "lectura": "いい", "significado": "Bien / está permitido" }
+    ]
+  },
+  {
+    "contexto_escena": "Pidiendo el menú del día en la cafetería.",
+    "frase_completa_jp": "Aセットひとつください。",
+    "frase_es": "Un menú A, por favor.",
+    "vocabulario_desglosado": [
+      { "forma": "ひとつ", "lectura": "ひとつ", "significado": "Uno / una unidad" },
+      { "forma": "ください", "lectura": "ください", "significado": "Por favor (deme)" }
+    ]
+  },
+  {
+    "contexto_escena": "Despidiéndose al terminar la jornada laboral o escolar.",
+    "frase_completa_jp": "お疲れ様！よく頑張ったね。",
+    "frase_es": "¡Buen trabajo! Te esforzaste mucho.",
+    "vocabulario_desglosado": [
+      { "forma": "お疲れ様", "lectura": "おつかれさま", "significado": "Buen trabajo / gracias por el esfuerzo" },
+      { "forma": "頑張った", "lectura": "がんばった", "significado": "Te esforzaste / lo diste todo (pasado)" }
+    ]
+  },
+  {
+    "contexto_escena": "Diciéndole buenas noches a alguien antes de dormir.",
+    "frase_completa_jp": "おやすみ！また明日ね。",
+    "frase_es": "¡Buenas noches! Hasta mañana.",
+    "vocabulario_desglosado": [
+      { "forma": "おやすみ", "lectura": "おやすみ", "significado": "Buenas noches (informal)" },
+      { "forma": "明日", "lectura": "あした", "significado": "Mañana" }
     ]
   }
 ]

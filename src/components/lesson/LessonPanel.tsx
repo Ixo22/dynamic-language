@@ -53,7 +53,8 @@ export function LessonPanel() {
     } catch {}
   }, [])
 
-  const fetchDialogue = useCallback(async () => {
+  const fetchDialogue = useCallback(async (levelOverride?: JLPTLevel) => {
+    const effectiveLevel = levelOverride ?? level
     setLoading(true)
     setError(null)
     setDialogue(null)
@@ -61,11 +62,11 @@ export function LessonPanel() {
       const res = await fetch('/api/generate-dialogue', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ level, exclude: dialogue?.frase_completa_jp }),
+        body:    JSON.stringify({ level: effectiveLevel, exclude: dialogue?.frase_completa_jp }),
       })
       if (!res.ok) throw new Error()
       const data = await res.json()
-      addVocab(data.vocabulario_desglosado)
+      addVocab(data.vocabulario_desglosado, effectiveLevel)
       setDialogue(data)
     } catch {
       setError('No se pudo generar el diálogo. Comprueba tu API key.')
@@ -90,6 +91,7 @@ export function LessonPanel() {
   function handleLevel(l: JLPTLevel) {
     setLevel(l)
     try { localStorage.setItem(LEVEL_KEY, l) } catch {}
+    fetchDialogue(l)
   }
 
   function switchTab(t: Tab) {

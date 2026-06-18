@@ -2,6 +2,7 @@ export interface StoredVocab {
   forma:       string
   lectura:     string
   significado: string
+  level?:      string
 }
 
 export interface VocabSRS {
@@ -13,12 +14,22 @@ export interface VocabSRS {
 const VOCAB_KEY = 'dl_vocab_seen'
 const SRS_KEY   = 'dl_vocab_srs'
 
-export function addVocab(items: StoredVocab[]): void {
+export function addVocab(items: { forma: string; lectura: string; significado: string }[], level?: string): void {
   if (typeof window === 'undefined') return
   try {
     const map = new Map(getVocab().map(v => [v.forma, v]))
-    items.forEach(v => map.set(v.forma, v))
+    items.forEach(v => map.set(v.forma, { ...v, ...(level ? { level } : {}) }))
     localStorage.setItem(VOCAB_KEY, JSON.stringify([...map.values()]))
+  } catch {}
+}
+
+export function removeVocab(forma: string): void {
+  if (typeof window === 'undefined') return
+  try {
+    localStorage.setItem(VOCAB_KEY, JSON.stringify(getVocab().filter(v => v.forma !== forma)))
+    const srs = getVocabSRS()
+    delete srs[forma]
+    localStorage.setItem(SRS_KEY, JSON.stringify(srs))
   } catch {}
 }
 
