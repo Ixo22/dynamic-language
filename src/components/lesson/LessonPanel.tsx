@@ -256,7 +256,7 @@ export function LessonPanel() {
 
       {/* ─── Área de scroll — todo el contenido aquí abajo ─── */}
       <div style={{ flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
-        <main className="max-w-lg md:max-w-2xl mx-auto w-full">
+        <main className="max-w-lg md:max-w-2xl mx-auto w-full pb-6">
 
           {tab === 'lesson' && (
             <div key="lesson" className="flex flex-col fade-up">
@@ -349,6 +349,27 @@ export function LessonPanel() {
           )}
 
         </main>
+
+        {/* ─── Footer ─── */}
+        <footer className="max-w-lg md:max-w-2xl mx-auto w-full px-5 py-10 mt-4" style={{ borderTop: '1px solid var(--border)' }}>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2.5">
+              <div className="w-6 h-6 flex items-center justify-center jp font-black text-[10px] select-none"
+                style={{ background: 'var(--red)', color: '#f5ede0', borderRadius: 3, opacity: 0.7 }}>語</div>
+              <div>
+                <p className="jp font-bold text-sm leading-none" style={{ color: 'var(--muted)' }}>動的言語</p>
+                <p className="text-[9px] tracking-[0.15em] uppercase mt-0.5" style={{ color: 'var(--muted)', opacity: 0.5 }}>Dynamic Language</p>
+              </div>
+            </div>
+            <p className="text-[9px] tracking-[0.15em] text-right" style={{ color: 'var(--muted)', opacity: 0.4 }}>
+              Japonés real<br />para hispanohablantes
+            </p>
+          </div>
+          <p className="text-[8px] tracking-[0.2em] uppercase mt-6 text-center" style={{ color: 'var(--muted)', opacity: 0.25 }}>
+            © {new Date().getFullYear()} Dynamic Language
+          </p>
+        </footer>
+
       </div>
     </div>
   )
