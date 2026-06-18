@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Fondo oscuro -->
-  <rect width="32" height="32" rx="5" fill="#0d0b08"/>
-  <!-- Burbuja de texto (aprendo idiomas) -->
-  <rect x="3" y="3" width="23" height="17" rx="3.5" fill="#c47d17"/>
-  <!-- Cola de la burbuja -->
-  <polygon points="6,20 4,28 15,20" fill="#c47d17"/>
-  <!-- Tres puntos que evocan "estoy aprendiendo a hablar" -->
-  <circle cx="9.5"  cy="11.5" r="2" fill="#0d0b08"/>
-  <circle cx="14.5" cy="11.5" r="2" fill="#0d0b08"/>
-  <circle cx="19.5" cy="11.5" r="2" fill="#0d0b08"/>
+  <!-- Fondo oscuro con borde sutil -->
+  <rect width="32" height="32" rx="7" fill="#0d0b08"/>
+  <!-- Sello rojo (hanko) -->
+  <rect x="5" y="5" width="22" height="22" rx="3.5" fill="#9e3222"/>
+  <!-- Detalle interior: línea dorada sutil -->
+  <rect x="7.5" y="7.5" width="17" height="17" rx="2.5" fill="none" stroke="#e8a832" stroke-width="0.7" opacity="0.45"/>
+  <!-- Carácter 語 en crema -->
+  <text x="16" y="22.5" text-anchor="middle"
+    font-family="'Noto Sans JP','Hiragino Sans','Yu Gothic','Meiryo','serif'"
+    font-size="15" font-weight="900" fill="#f5ede0" letter-spacing="-0.5">語</text>
 </svg>

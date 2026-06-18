@@ -8,6 +8,7 @@ import { SRSButtons } from './SRSButtons'
 import { InputPractice } from './InputPractice'
 import { StrokeAnimator } from '@/components/stroke/StrokeAnimator'
 import { FlashcardDeck } from '@/components/flashcards/FlashcardDeck'
+import { SituacionSelector } from '@/components/situaciones/SituacionSelector'
 import { addVocab } from '@/lib/vocab-store'
 
 const TOGGLES_KEY = 'dl_toggles'
@@ -25,18 +26,23 @@ const LEVEL_LABELS: Record<JLPTLevel, string> = {
   A2: 'Elemental',
 }
 
-type Tab = 'lesson' | 'cards' | 'stroke'
-const TABS: [Tab, string][] = [['lesson', 'Lección'], ['cards', 'Tarjetas'], ['stroke', 'Trazos']]
+type Tab = 'lesson' | 'situaciones' | 'cards' | 'stroke'
+const TABS: [Tab, string, string][] = [
+  ['lesson',      'Lección',      '読'],
+  ['situaciones', 'Situaciones',  '場'],
+  ['cards',       'Tarjetas',     '語'],
+  ['stroke',      'Trazos',       '書'],
+]
 
 export function LessonPanel() {
-  const [tab, setTab]                 = useState<Tab>('lesson')
-  const [toggles, setToggles]         = useState<UIToggles>(DEFAULT_TOGGLES)
-  const [level, setLevel]             = useState<JLPTLevel>('A1')
-  const [dialogue, setDialogue]       = useState<DialogueResponse | null>(null)
-  const [loading, setLoading]         = useState(false)
-  const [error, setError]             = useState<string | null>(null)
-  const [revealed, setRevealed]       = useState(false)
-  const [drawerOpen, setDrawerOpen]   = useState(false)
+  const [tab, setTab]               = useState<Tab>('lesson')
+  const [toggles, setToggles]       = useState<UIToggles>(DEFAULT_TOGGLES)
+  const [level, setLevel]           = useState<JLPTLevel>('A1')
+  const [dialogue, setDialogue]     = useState<DialogueResponse | null>(null)
+  const [loading, setLoading]       = useState(false)
+  const [error, setError]           = useState<string | null>(null)
+  const [revealed, setRevealed]     = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
   useEffect(() => {
     try {
@@ -91,6 +97,8 @@ export function LessonPanel() {
     setDrawerOpen(false)
   }
 
+  const activeLabel = TABS.find(([t]) => t === tab)?.[1] ?? ''
+
   return (
     <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
 
@@ -99,7 +107,7 @@ export function LessonPanel() {
         className="fixed inset-0 z-50 md:hidden transition-all duration-300"
         style={{
           background: 'rgba(0,0,0,0.65)',
-          backdropFilter: 'blur(2px)',
+          backdropFilter: 'blur(3px)',
           pointerEvents: drawerOpen ? 'auto' : 'none',
           opacity: drawerOpen ? 1 : 0,
         }}
@@ -110,35 +118,33 @@ export function LessonPanel() {
       <div
         className="fixed top-0 left-0 h-full z-50 md:hidden flex flex-col"
         style={{
-          width: 270,
+          width: 280,
           background: 'var(--bg)',
           borderRight: '1px solid var(--border)',
           transform: drawerOpen ? 'translateX(0)' : 'translateX(-100%)',
           transition: 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1)',
+          boxShadow: drawerOpen ? '8px 0 40px rgba(0,0,0,0.6)' : 'none',
         }}
       >
-        {/* Cabecera del drawer */}
         <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 flex items-center justify-center jp font-black text-[11px] select-none sway"
-              style={{ background: 'var(--red)', color: '#f5ede0', borderRadius: 3 }}>語</div>
+            <div className="w-8 h-8 flex items-center justify-center jp font-black text-[13px] select-none sway"
+              style={{ background: 'var(--red)', color: '#f5ede0', borderRadius: 4 }}>語</div>
             <div>
               <p className="jp font-bold text-base leading-none" style={{ color: 'var(--text)' }}>動的言語</p>
               <p className="text-[9px] tracking-[0.12em] uppercase mt-0.5" style={{ color: 'var(--muted)' }}>Japonés real</p>
             </div>
           </div>
-          <button
-            onClick={() => setDrawerOpen(false)}
-            className="w-7 h-7 flex items-center justify-center transition-colors"
-            style={{ color: 'var(--muted)', fontSize: 18 }}
+          <button onClick={() => setDrawerOpen(false)}
+            className="w-8 h-8 flex items-center justify-center transition-colors text-lg"
+            style={{ color: 'var(--muted)' }}
             onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
             onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
           >✕</button>
         </div>
 
-        {/* Nivel */}
         <div className="px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
-          <p className="text-[8px] tracking-[0.3em] uppercase mb-2.5" style={{ color: 'var(--muted)' }}>Nivel</p>
+          <p className="text-[8px] tracking-[0.3em] uppercase mb-2.5 font-semibold" style={{ color: 'var(--muted)' }}>Nivel</p>
           <div className="flex gap-2">
             {(['A1', 'A2'] as JLPTLevel[]).map(l => (
               <button key={l} onClick={() => handleLevel(l)}
@@ -146,22 +152,17 @@ export function LessonPanel() {
                 style={level === l
                   ? { background: 'var(--amber)', color: 'var(--bg)', borderRadius: 3 }
                   : { border: '1px solid var(--border)', color: 'var(--muted)', borderRadius: 3 }
-                }>
-                {l} · {LEVEL_LABELS[l]}
-              </button>
+                }>{l} · {LEVEL_LABELS[l]}</button>
             ))}
           </div>
         </div>
 
-        {/* Navegación */}
-        <nav className="flex flex-col gap-1 px-3 py-4">
-          {TABS.map(([t, label], i) => (
-            <button
-              key={t}
-              onClick={() => switchTab(t)}
+        <nav className="flex flex-col gap-1 px-3 py-4 flex-1">
+          {TABS.map(([t, label, glyph], i) => (
+            <button key={t} onClick={() => switchTab(t)}
               className="flex items-center gap-3 px-3 py-3.5 text-sm font-semibold transition-all pop-in"
               style={{
-                animationDelay: `${i * 60}ms`,
+                animationDelay: `${i * 50}ms`,
                 borderRadius: 3,
                 color: tab === t ? 'var(--amber)' : 'var(--muted)',
                 background: tab === t ? 'rgba(196,125,23,0.08)' : 'transparent',
@@ -170,73 +171,80 @@ export function LessonPanel() {
               onMouseEnter={e => { if (tab !== t) e.currentTarget.style.background = 'rgba(255,255,255,0.03)' }}
               onMouseLeave={e => { if (tab !== t) e.currentTarget.style.background = 'transparent' }}
             >
-              <span className="w-5 text-center" style={{ fontSize: 15, opacity: 0.6 }}>
-                {t === 'lesson' ? '読' : t === 'cards' ? '語' : '書'}
-              </span>
-              {label}
-              {tab === t && <span className="ml-auto text-[10px] tracking-widest uppercase" style={{ color: 'var(--amber)', opacity: 0.7 }}>Activo</span>}
+              <span className="jp w-5 text-center shrink-0 opacity-60" style={{ fontSize: 15 }}>{glyph}</span>
+              <span className="flex-1">{label}</span>
+              {tab === t && <span className="text-[8px] tracking-widest uppercase opacity-60">Activo</span>}
             </button>
           ))}
         </nav>
       </div>
 
-      {/* ─── Barra sticky ─── */}
+      {/* ─── Navbar sticky ─── */}
       <div className="sticky top-0 z-30" style={{ background: 'var(--bg)', borderBottom: '1px solid var(--border)' }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
 
-        <header className="flex items-center justify-between px-5 py-4">
-          <div className="flex items-center gap-2.5">
-            {/* Hamburguesa — solo móvil */}
-            <button
-              className="flex flex-col justify-center gap-1.5 w-8 h-8 md:hidden"
-              onClick={() => setDrawerOpen(o => !o)}
-              aria-label="Menú"
-            >
-              <span className="block h-px w-5 transition-all" style={{ background: 'var(--muted)' }} />
-              <span className="block h-px w-4 transition-all" style={{ background: 'var(--muted)' }} />
-              <span className="block h-px w-5 transition-all" style={{ background: 'var(--muted)' }} />
+          {/* Logo */}
+          <div className="flex items-center gap-2 shrink-0">
+            <button className="flex flex-col justify-center gap-1.5 w-8 h-8 md:hidden shrink-0"
+              onClick={() => setDrawerOpen(o => !o)} aria-label="Menú">
+              <span className="block h-px w-5" style={{ background: 'var(--muted)' }} />
+              <span className="block h-px w-3.5 ml-0.5" style={{ background: 'var(--muted)', opacity: 0.6 }} />
+              <span className="block h-px w-5" style={{ background: 'var(--muted)' }} />
             </button>
-
             <div className="flex items-center gap-2.5">
               <div className="w-7 h-7 flex items-center justify-center jp font-black text-[11px] shrink-0 select-none sway"
                 style={{ background: 'var(--red)', color: '#f5ede0', borderRadius: 3 }}>語</div>
-              <div>
+              <div className="hidden sm:block">
                 <h1 className="jp font-bold text-base leading-none" style={{ color: 'var(--text)' }}>動的言語</h1>
-                <p className="text-[9px] tracking-[0.12em] uppercase mt-0.5" style={{ color: 'var(--muted)' }}>Japonés real</p>
+                <p className="text-[8px] tracking-[0.15em] uppercase" style={{ color: 'var(--muted)' }}>Japonés real</p>
               </div>
             </div>
           </div>
 
-          {/* Selector de nivel — solo desktop */}
-          <div className="hidden md:flex items-center gap-px">
-            {(['A1', 'A2'] as JLPTLevel[]).map(l => (
-              <button key={l} onClick={() => handleLevel(l)} className="px-3 py-1 text-xs font-semibold transition-all"
-                style={level === l ? { background: 'var(--amber)', color: 'var(--bg)', borderRadius: 3 } : { color: 'var(--muted)' }}>
-                {l}
+          {/* Tabs — desktop centrado */}
+          <nav className="hidden md:flex items-center gap-0.5 flex-1 justify-center">
+            {TABS.map(([t, label]) => (
+              <button key={t} onClick={() => switchTab(t)}
+                className="relative px-4 py-1.5 text-sm font-semibold transition-all"
+                style={{
+                  borderRadius: 3,
+                  color: tab === t ? 'var(--amber)' : 'var(--muted)',
+                  background: tab === t ? 'rgba(196,125,23,0.08)' : 'transparent',
+                }}
+                onMouseEnter={e => { if (tab !== t) e.currentTarget.style.background = 'rgba(255,255,255,0.03)' }}
+                onMouseLeave={e => { if (tab !== t) e.currentTarget.style.background = 'transparent' }}
+              >
+                {label}
+                {tab === t && (
+                  <span className="absolute -bottom-[14px] left-2 right-2 h-[2px]"
+                    style={{ background: 'var(--amber)', borderRadius: '2px 2px 0 0' }} />
+                )}
               </button>
             ))}
+          </nav>
+
+          {/* Nivel — desktop / tab activo — móvil */}
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="hidden md:flex items-center gap-1 p-1"
+              style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 3 }}>
+              {(['A1', 'A2'] as JLPTLevel[]).map(l => (
+                <button key={l} onClick={() => handleLevel(l)}
+                  className="px-2.5 py-0.5 text-xs font-bold transition-all"
+                  style={level === l
+                    ? { background: 'var(--amber)', color: 'var(--bg)', borderRadius: 2 }
+                    : { color: 'var(--muted)' }
+                  }>{l}</button>
+              ))}
+            </div>
+            <span className="md:hidden text-[10px] tracking-[0.2em] uppercase font-semibold"
+              style={{ color: 'var(--amber)' }}>{activeLabel}</span>
           </div>
-
-          {/* Tab activo en móvil — indicador compacto */}
-          <span className="md:hidden text-[10px] tracking-[0.2em] uppercase font-semibold" style={{ color: 'var(--amber)' }}>
-            {TABS.find(([t]) => t === tab)?.[1]}
-          </span>
-        </header>
-
-        {/* Tabs — solo desktop */}
-        <div className="hidden md:flex" style={{ borderTop: '1px solid var(--border)' }}>
-          {TABS.map(([t, label]) => (
-            <button key={t} onClick={() => switchTab(t)}
-              className="px-5 py-3 text-sm font-semibold relative transition-colors"
-              style={{ color: tab === t ? 'var(--text)' : 'var(--muted)' }}>
-              {label}
-              {tab === t && <span className="absolute bottom-0 left-5 right-5 h-[2px]" style={{ background: 'var(--amber)', borderRadius: '2px 2px 0 0' }} />}
-            </button>
-          ))}
         </div>
       </div>
 
       {/* ─── Contenido ─── */}
       <main className="flex-1 flex flex-col max-w-lg mx-auto w-full">
+
         {tab === 'lesson' && (
           <div key="lesson" className="flex flex-col flex-1 fade-up">
             <div style={{ borderBottom: '1px solid var(--border)' }}>
@@ -249,8 +257,9 @@ export function LessonPanel() {
                   <p className="text-[10px] tracking-[0.35em] uppercase" style={{ color: 'var(--muted)' }}>Generando frase</p>
                 </div>
               )}
-              {error && !loading && <div className="px-5 pt-10"><p className="text-sm" style={{ color: 'var(--red)' }}>{error}</p></div>}
-
+              {error && !loading && (
+                <div className="px-5 pt-10"><p className="text-sm" style={{ color: 'var(--red)' }}>{error}</p></div>
+              )}
               {dialogue && !loading && (
                 <div className="fade-up">
                   <div className="px-5 pt-6 flex items-center gap-3 slide-right">
@@ -260,7 +269,6 @@ export function LessonPanel() {
                     </span>
                     <p className="text-xs italic leading-snug" style={{ color: 'var(--muted)' }}>{dialogue.contexto_escena}</p>
                   </div>
-
                   {audioOnlyMode && !revealed && (
                     <div className="px-5 pt-4 pb-2">
                       <span className="text-[9px] tracking-[0.25em] uppercase px-2 py-0.5"
@@ -269,16 +277,10 @@ export function LessonPanel() {
                       </span>
                     </div>
                   )}
-
                   <div className="px-5">
-                    <DialogueReader
-                      dialogue={dialogue}
-                      showHints={toggles.showHints}
-                      showText={audioOnlyMode ? revealed : toggles.showText}
-                      showAudio={toggles.showAudio}
-                    />
+                    <DialogueReader dialogue={dialogue} showHints={toggles.showHints}
+                      showText={audioOnlyMode ? revealed : toggles.showText} showAudio={toggles.showAudio} />
                   </div>
-
                   {audioOnlyMode && !revealed && (
                     <div className="px-5 pb-5" style={{ borderTop: '1px solid var(--border)', paddingTop: 16 }}>
                       <button onClick={() => setRevealed(true)}
@@ -289,13 +291,11 @@ export function LessonPanel() {
                       >¿Quieres ver la frase y la traducción?</button>
                     </div>
                   )}
-
                   {toggles.showInput && (
                     <div className="px-5 py-5" style={{ borderTop: '1px solid var(--border)' }}>
                       <InputPractice target={dialogue.frase_completa_jp} />
                     </div>
                   )}
-
                   <div style={{ borderTop: '1px solid var(--border)' }}>
                     <p className="px-5 pt-5 text-[10px] tracking-[0.25em] uppercase text-center mb-1" style={{ color: 'var(--muted)' }}>¿Entendiste la frase?</p>
                     <SRSButtons phrase={dialogue.frase_completa_jp} />
@@ -303,7 +303,6 @@ export function LessonPanel() {
                 </div>
               )}
             </div>
-
             <button onClick={fetchDialogue} disabled={loading}
               className="group flex items-center justify-between w-full px-5 py-4 transition-colors border-pulse"
               style={{ borderTop: '1px solid var(--border)', color: 'var(--muted)' }}
@@ -313,6 +312,12 @@ export function LessonPanel() {
               <span className="text-[11px] tracking-[0.2em] uppercase">{loading ? 'Cargando...' : 'Ver otra frase'}</span>
               <span className="text-base group-hover:translate-x-1 transition-transform inline-block">→</span>
             </button>
+          </div>
+        )}
+
+        {tab === 'situaciones' && (
+          <div key="situaciones" className="fade-up">
+            <SituacionSelector />
           </div>
         )}
 
