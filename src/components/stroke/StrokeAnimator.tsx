@@ -63,43 +63,51 @@ function AnimatedStroke({ svgContent, char, speed, replayKey }: {
   useEffect(() => {
     if (!containerRef.current) return
     const container = containerRef.current
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(svgContent, 'image/svg+xml')
-    const svg = doc.querySelector('svg')
+    const parser    = new DOMParser()
+    const svg       = parser.parseFromString(svgContent, 'image/svg+xml').querySelector('svg')
     if (!svg) return
 
     svg.setAttribute('width', '120')
     svg.setAttribute('height', '120')
     svg.setAttribute('viewBox', '0 0 109 109')
 
-    const paths = Array.from(svg.querySelectorAll('path'))
+    container.innerHTML = ''
+    container.appendChild(svg)
+
+    // Forzar reflow para que el navegador registre el estado inicial antes de animar
+    void container.getBoundingClientRect()
+
+    const paths = Array.from(svg.querySelectorAll('path')) as SVGPathElement[]
+
+    // Ahora sí están en el DOM → getTotalLength() devuelve valores reales
     paths.forEach(path => {
-      const len = (path as SVGPathElement).getTotalLength?.() ?? 200
-      path.style.strokeDasharray  = `${len}`
-      path.style.strokeDashoffset = `${len}`
+      const len = path.getTotalLength()
       path.style.fill             = 'none'
       path.style.stroke           = '#c47d17'
       path.style.strokeLinecap    = 'round'
       path.style.strokeLinejoin   = 'round'
       path.style.strokeWidth      = '4'
+      path.style.strokeDasharray  = `${len}`
+      path.style.strokeDashoffset = `${len}`
     })
 
-    container.innerHTML = ''
-    container.appendChild(svg)
+    // Segundo reflow para que el dashoffset=len quede pintado
+    void container.getBoundingClientRect()
 
-    const mult  = speed === 'slow' ? 22 : 3
-    const gap   = speed === 'slow' ? 400 : 80
-    const minMs = speed === 'slow' ? 1200 : 300
+    const strokeMs = speed === 'slow' ? 2400 : 350
+    const gapMs    = speed === 'slow' ? 600  : 60
+
+    const timers: ReturnType<typeof setTimeout>[] = []
     let delay = 0
     paths.forEach(path => {
-      const len      = (path as SVGPathElement).getTotalLength?.() ?? 200
-      const duration = Math.max(minMs, len * mult)
-      setTimeout(() => {
-        path.style.transition       = `stroke-dashoffset ${duration}ms ease-in-out`
+      timers.push(setTimeout(() => {
+        path.style.transition       = `stroke-dashoffset ${strokeMs}ms ease-in-out`
         path.style.strokeDashoffset = '0'
-      }, delay)
-      delay += duration + gap
+      }, delay))
+      delay += strokeMs + gapMs
     })
+
+    return () => timers.forEach(clearTimeout)
   }, [svgContent, speed, replayKey])
 
   return <div ref={containerRef} className="w-[120px] h-[120px] flex items-center justify-center" title={char} />
