@@ -1,0 +1,263 @@
+[
+  {
+    "contexto_escena": "Un amigo te dice que ha estado entrenando mucho últimamente.",
+    "frase_completa_jp": "最近ずっと練習してるけど、全然上手くならない。",
+    "frase_es": "Últimamente he estado practicando todo el tiempo, pero no mejoro nada.",
+    "vocabulario_desglosado": [
+      { "forma": "最近", "lectura": "さいきん", "significado": "Últimamente / recientemente" },
+      { "forma": "ずっと", "lectura": "ずっと", "significado": "Todo el tiempo / continuamente" },
+      { "forma": "練習してる", "lectura": "れんしゅうしてる", "significado": "Estoy practicando" },
+      { "forma": "全然", "lectura": "ぜんぜん", "significado": "Para nada / en absoluto" },
+      { "forma": "上手くならない", "lectura": "うまくならない", "significado": "No mejorar / no volverse hábil" }
+    ]
+  },
+  {
+    "contexto_escena": "En la azotea de la escuela, un amigo te pregunta si tienes algún sueño.",
+    "frase_completa_jp": "お前、将来何になりたいの？",
+    "frase_es": "Oye, ¿qué quieres ser en el futuro?",
+    "vocabulario_desglosado": [
+      { "forma": "お前", "lectura": "おまえ", "significado": "Tú (informal/masculino, muy común en anime)" },
+      { "forma": "将来", "lectura": "しょうらい", "significado": "En el futuro / el porvenir" },
+      { "forma": "何になりたい", "lectura": "なになりたい", "significado": "Qué quieres ser / en qué quieres convertirte" }
+    ]
+  },
+  {
+    "contexto_escena": "Tu amigo no entiende por qué te esfuerzas tanto en algo.",
+    "frase_completa_jp": "そんなに頑張る必要ある？",
+    "frase_es": "¿Es necesario esforzarse tanto?",
+    "vocabulario_desglosado": [
+      { "forma": "そんなに", "lectura": "そんなに", "significado": "Tanto / de esa manera" },
+      { "forma": "頑張る", "lectura": "がんばる", "significado": "Esforzarse / dar el máximo" },
+      { "forma": "必要ある", "lectura": "ひつようある", "significado": "¿Es necesario? / ¿hace falta?" }
+    ]
+  },
+  {
+    "contexto_escena": "Alguien comenta que el protagonista de un anime tomó una mala decisión.",
+    "frase_completa_jp": "あいつ、本当にそれで行くつもりか？",
+    "frase_es": "¿De verdad ese tipo piensa ir con eso?",
+    "vocabulario_desglosado": [
+      { "forma": "あいつ", "lectura": "あいつ", "significado": "Ese tipo / ese chico (informal, a veces despectivo)" },
+      { "forma": "本当に", "lectura": "ほんとうに", "significado": "De verdad / realmente" },
+      { "forma": "つもり", "lectura": "つもり", "significado": "Intención de hacer algo" }
+    ]
+  },
+  {
+    "contexto_escena": "Un amigo te confiesa que está nervioso antes de un partido importante.",
+    "frase_completa_jp": "正直、ちょっと怖い。でも逃げたくない。",
+    "frase_es": "Siendo honesto, tengo un poco de miedo. Pero no quiero huir.",
+    "vocabulario_desglosado": [
+      { "forma": "正直", "lectura": "しょうじき", "significado": "Honestamente / siendo sincero" },
+      { "forma": "怖い", "lectura": "こわい", "significado": "Miedo / aterrador" },
+      { "forma": "逃げたくない", "lectura": "にげたくない", "significado": "No quiero huir / escapar" }
+    ]
+  },
+  {
+    "contexto_escena": "Alguien te pide que no le cuentes el final de un anime.",
+    "frase_completa_jp": "ネタバレしないでよ！まだ追いついてないんだから。",
+    "frase_es": "¡No me hagas spoilers! Que todavía no he llegado ahí.",
+    "vocabulario_desglosado": [
+      { "forma": "ネタバレ", "lectura": "ネタバレ", "significado": "Spoiler / revelar el final" },
+      { "forma": "しないで", "lectura": "しないで", "significado": "No lo hagas (petición)" },
+      { "forma": "まだ", "lectura": "まだ", "significado": "Todavía / aún" },
+      { "forma": "追いついてない", "lectura": "おいついてない", "significado": "No he llegado / no me he puesto al día" }
+    ]
+  },
+  {
+    "contexto_escena": "Tu amigo llega con cara de cansancio total.",
+    "frase_completa_jp": "昨日、全然寝れなかった。死にそう。",
+    "frase_es": "Ayer no pude dormir nada. Me muero.",
+    "vocabulario_desglosado": [
+      { "forma": "昨日", "lectura": "きのう", "significado": "Ayer" },
+      { "forma": "全然", "lectura": "ぜんぜん", "significado": "Para nada / en absoluto" },
+      { "forma": "寝れなかった", "lectura": "ねれなかった", "significado": "No pude dormir" },
+      { "forma": "死にそう", "lectura": "しにそう", "significado": "Parece que voy a morir (expresión de agotamiento extremo)" }
+    ]
+  },
+  {
+    "contexto_escena": "Un amigo te dice que no se rinde aunque sea difícil.",
+    "frase_completa_jp": "諦めたら、そこで終わりだろ。",
+    "frase_es": "Si te rindes, ahí termina todo, ¿no?",
+    "vocabulario_desglosado": [
+      { "forma": "諦めたら", "lectura": "あきらめたら", "significado": "Si te rindes / si abandonas" },
+      { "forma": "そこで", "lectura": "そこで", "significado": "Ahí / en ese punto" },
+      { "forma": "終わり", "lectura": "おわり", "significado": "El fin / el final" },
+      { "forma": "だろ", "lectura": "だろ", "significado": "¿Verdad? / ¿no? (confirmación informal)" }
+    ]
+  },
+  {
+    "contexto_escena": "Alguien pregunta qué pasa cuando algo sale mal en un momento crítico.",
+    "frase_completa_jp": "なんでこんな大事なときに限って失敗するんだよ！",
+    "frase_es": "¡Por qué siempre fallo justo en los momentos más importantes!",
+    "vocabulario_desglosado": [
+      { "forma": "なんで", "lectura": "なんで", "significado": "Por qué (informal)" },
+      { "forma": "大事なとき", "lectura": "だいじなとき", "significado": "Momento importante" },
+      { "forma": "に限って", "lectura": "にかぎって", "significado": "Justo cuando / precisamente en ese momento" },
+      { "forma": "失敗する", "lectura": "しっぱいする", "significado": "Fallar / cometer un error" }
+    ]
+  },
+  {
+    "contexto_escena": "Tu amigo te confiesa algo que no le ha dicho a nadie.",
+    "frase_completa_jp": "これ、誰にも言わないでほしいんだけど...",
+    "frase_es": "Oye, preferiría que no se lo dijeras a nadie...",
+    "vocabulario_desglosado": [
+      { "forma": "誰にも", "lectura": "だれにも", "significado": "A nadie" },
+      { "forma": "言わないで", "lectura": "いわないで", "significado": "No digas / no cuentes" },
+      { "forma": "ほしい", "lectura": "ほしい", "significado": "Quiero que (alguien haga algo)" }
+    ]
+  },
+  {
+    "contexto_escena": "Un amigo reacciona al ver algo impactante.",
+    "frase_completa_jp": "嘘だろ...信じられない。",
+    "frase_es": "No puede ser... No me lo puedo creer.",
+    "vocabulario_desglosado": [
+      { "forma": "嘘だろ", "lectura": "うそだろ", "significado": "No puede ser / mentira ¿verdad? (incredulidad)" },
+      { "forma": "信じられない", "lectura": "しんじられない", "significado": "No puedo creerlo / increíble" }
+    ]
+  },
+  {
+    "contexto_escena": "Alguien te da ánimos antes de algo importante.",
+    "frase_completa_jp": "お前ならできる。信じてるぞ。",
+    "frase_es": "Si eres tú, puedes lograrlo. Confío en ti.",
+    "vocabulario_desglosado": [
+      { "forma": "お前なら", "lectura": "おまえなら", "significado": "Si eres tú / tratándose de ti" },
+      { "forma": "できる", "lectura": "できる", "significado": "Puedes / eres capaz" },
+      { "forma": "信じてる", "lectura": "しんじてる", "significado": "Confío / creo en ti" },
+      { "forma": "ぞ", "lectura": "ぞ", "significado": "Partícula masculina de énfasis/afirmación" }
+    ]
+  },
+  {
+    "contexto_escena": "Ves que tu amigo está triste y le preguntas qué le pasa.",
+    "frase_completa_jp": "どうした？元気なさそうじゃん。",
+    "frase_es": "¿Qué te pasa? Parece que no estás bien.",
+    "vocabulario_desglosado": [
+      { "forma": "どうした", "lectura": "どうした", "significado": "¿Qué pasa? / ¿qué te ocurre?" },
+      { "forma": "元気なさそう", "lectura": "げんきなさそう", "significado": "Parece que no estás bien / sin energía" },
+      { "forma": "じゃん", "lectura": "じゃん", "significado": "¿No? / ¿verdad? (confirmación coloquial)" }
+    ]
+  },
+  {
+    "contexto_escena": "Te dicen que alguien llegó sin avisar.",
+    "frase_completa_jp": "突然来るなよ、びっくりするだろ！",
+    "frase_es": "¡No vengas de repente, que me asustas!",
+    "vocabulario_desglosado": [
+      { "forma": "突然", "lectura": "とつぜん", "significado": "De repente / de golpe" },
+      { "forma": "来るな", "lectura": "くるな", "significado": "No vengas (prohibición informal)" },
+      { "forma": "びっくりする", "lectura": "びっくりする", "significado": "Asustarse / sorprenderse" }
+    ]
+  },
+  {
+    "contexto_escena": "Dos amigos discuten sobre quién ganó una apuesta.",
+    "frase_completa_jp": "ほら、やっぱり俺が正しかったじゃないか。",
+    "frase_es": "¿Lo ves? Al final tenía razón, como siempre.",
+    "vocabulario_desglosado": [
+      { "forma": "ほら", "lectura": "ほら", "significado": "¿Lo ves? / mira / ¡ya te lo dije!" },
+      { "forma": "やっぱり", "lectura": "やっぱり", "significado": "Al final / como esperaba / como siempre" },
+      { "forma": "俺", "lectura": "おれ", "significado": "Yo (informal/masculino)" },
+      { "forma": "正しかった", "lectura": "ただしかった", "significado": "Tenía razón / era correcto" }
+    ]
+  },
+  {
+    "contexto_escena": "Alguien lamenta no haber dicho algo a tiempo.",
+    "frase_completa_jp": "あのとき、ちゃんと言っておけばよかった。",
+    "frase_es": "Ojalá hubiera dicho algo bien en ese momento.",
+    "vocabulario_desglosado": [
+      { "forma": "あのとき", "lectura": "あのとき", "significado": "En aquel momento / en ese entonces" },
+      { "forma": "ちゃんと", "lectura": "ちゃんと", "significado": "Bien / correctamente / como se debe" },
+      { "forma": "言っておけばよかった", "lectura": "いっておけばよかった", "significado": "Ojalá lo hubiera dicho / debí haberlo dicho" }
+    ]
+  },
+  {
+    "contexto_escena": "Un amigo te recomienda no meterte en algo peligroso.",
+    "frase_completa_jp": "あまり深入りしない方がいいと思うけどな。",
+    "frase_es": "Creo que es mejor no meterse demasiado en eso.",
+    "vocabulario_desglosado": [
+      { "forma": "あまり", "lectura": "あまり", "significado": "Demasiado / en exceso (con negación o consejo)" },
+      { "forma": "深入りしない", "lectura": "ふかいりしない", "significado": "No meterse demasiado / no involucrarse profundamente" },
+      { "forma": "方がいい", "lectura": "ほうがいい", "significado": "Es mejor que / sería mejor" }
+    ]
+  },
+  {
+    "contexto_escena": "Alguien te dice que a pesar de todo sigue adelante.",
+    "frase_completa_jp": "つらくても、前に進むしかないじゃん。",
+    "frase_es": "Aunque sea duro, no queda otra que seguir adelante, ¿no?",
+    "vocabulario_desglosado": [
+      { "forma": "つらくても", "lectura": "つらくても", "significado": "Aunque sea duro / incluso si es difícil" },
+      { "forma": "前に進む", "lectura": "まえにすすむ", "significado": "Avanzar / seguir hacia adelante" },
+      { "forma": "しかない", "lectura": "しかない", "significado": "No hay otra opción que / solo queda" }
+    ]
+  },
+  {
+    "contexto_escena": "Te preguntan si conoces a alguien famoso del barrio.",
+    "frase_completa_jp": "あの人のこと、知ってる？結構有名なんだよ。",
+    "frase_es": "¿Sabes quién es esa persona? Es bastante famosa.",
+    "vocabulario_desglosado": [
+      { "forma": "あの人", "lectura": "あのひと", "significado": "Esa persona / aquella persona" },
+      { "forma": "知ってる", "lectura": "しってる", "significado": "Sabes / conoces (estado actual)" },
+      { "forma": "結構", "lectura": "けっこう", "significado": "Bastante / considerablemente" },
+      { "forma": "有名", "lectura": "ゆうめい", "significado": "Famoso / conocido" }
+    ]
+  },
+  {
+    "contexto_escena": "Alguien se queja de que siempre le toca hacer las cosas difíciles.",
+    "frase_completa_jp": "なんでいつも俺だけこんな目に遭うんだ。",
+    "frase_es": "Por qué siempre me toca a mí pasar por esto.",
+    "vocabulario_desglosado": [
+      { "forma": "なんで", "lectura": "なんで", "significado": "Por qué (informal)" },
+      { "forma": "いつも", "lectura": "いつも", "significado": "Siempre" },
+      { "forma": "俺だけ", "lectura": "おれだけ", "significado": "Solo yo / únicamente yo" },
+      { "forma": "こんな目に遭う", "lectura": "こんなめにあう", "significado": "Pasar por esto / tener que vivir algo así" }
+    ]
+  },
+  {
+    "contexto_escena": "Alguien comenta que cambiarán de instituto el próximo año.",
+    "frase_completa_jp": "来年から別の学校に行くことになった。",
+    "frase_es": "Resultó que el año que viene iré a otra escuela.",
+    "vocabulario_desglosado": [
+      { "forma": "来年", "lectura": "らいねん", "significado": "El año que viene" },
+      { "forma": "別の", "lectura": "べつの", "significado": "Otro / distinto" },
+      { "forma": "学校", "lectura": "がっこう", "significado": "Escuela / instituto" },
+      { "forma": "行くことになった", "lectura": "いくことになった", "significado": "Resultó que iré / se decidió que vaya" }
+    ]
+  },
+  {
+    "contexto_escena": "Discuten sobre quién debería dar el primer paso en una situación.",
+    "frase_completa_jp": "そういうのは、やっぱり自分から動かないとな。",
+    "frase_es": "En esas cosas, tienes que moverte tú mismo, ¿sabes?",
+    "vocabulario_desglosado": [
+      { "forma": "そういうの", "lectura": "そういうの", "significado": "Ese tipo de cosas / esas situaciones" },
+      { "forma": "やっぱり", "lectura": "やっぱり", "significado": "Al final / como siempre / como se esperaba" },
+      { "forma": "自分から", "lectura": "じぶんから", "significado": "Por uno mismo / tomar la iniciativa" },
+      { "forma": "動かないと", "lectura": "うごかないと", "significado": "Si no te mueves / hay que actuar" }
+    ]
+  },
+  {
+    "contexto_escena": "Un amigo te dice que estuvo esperándote mucho rato.",
+    "frase_completa_jp": "どんだけ待たせるんだよ！",
+    "frase_es": "¡¿Cuánto me vas a hacer esperar?!",
+    "vocabulario_desglosado": [
+      { "forma": "どんだけ", "lectura": "どんだけ", "significado": "Cuánto / hasta qué punto (informal enfático)" },
+      { "forma": "待たせる", "lectura": "またせる", "significado": "Hacer esperar (causativo de 待つ)" },
+      { "forma": "んだよ", "lectura": "んだよ", "significado": "Partícula de explicación + énfasis / queja" }
+    ]
+  },
+  {
+    "contexto_escena": "Alguien reacciona sorprendido ante un giro inesperado de la historia.",
+    "frase_completa_jp": "まじか...全部伏線だったのか。",
+    "frase_es": "En serio... Era todo una pista desde el principio.",
+    "vocabulario_desglosado": [
+      { "forma": "まじか", "lectura": "まじか", "significado": "¿En serio? / no puede ser (sorpresa)" },
+      { "forma": "全部", "lectura": "ぜんぶ", "significado": "Todo / absolutamente todo" },
+      { "forma": "伏線", "lectura": "ふくせん", "significado": "Pista oculta / foreshadowing / trama que se revela después" }
+    ]
+  },
+  {
+    "contexto_escena": "Alguien admite que cometió un error y lo acepta.",
+    "frase_completa_jp": "俺が悪かった。素直に認める。",
+    "frase_es": "Fue culpa mía. Lo reconozco de forma honesta.",
+    "vocabulario_desglosado": [
+      { "forma": "俺が悪かった", "lectura": "おれがわるかった", "significado": "Fue culpa mía / yo estaba equivocado" },
+      { "forma": "素直に", "lectura": "すなおに", "significado": "Honestamente / sin resistencia / de buena fe" },
+      { "forma": "認める", "lectura": "みとめる", "significado": "Reconocer / admitir / aceptar" }
+    ]
+  }
+]
