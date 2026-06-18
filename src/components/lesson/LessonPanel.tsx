@@ -100,12 +100,23 @@ export function LessonPanel() {
   const activeLabel = TABS.find(([t]) => t === tab)?.[1] ?? ''
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
+    /*
+     * Outer shell: position:fixed + inset:0 = covers the entire screen pixel-perfect.
+     * The navbar is a plain flex item inside this shell — it never scrolls because
+     * the shell itself doesn't scroll. The content area is the only thing that scrolls,
+     * contained inside its own overflow-y:auto sibling. No z-index battles needed.
+     */
+    <div style={{
+      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+      display: 'flex', flexDirection: 'column',
+      background: 'var(--bg)', color: 'var(--text)',
+    }}>
 
-      {/* ─── Overlay móvil ─── */}
+      {/* ─── Overlay móvil (viewport-fixed, no ancestors with transform) ─── */}
       <div
-        className="fixed inset-0 z-50 md:hidden transition-all duration-300"
+        className="fixed inset-0 md:hidden transition-all duration-300"
         style={{
+          zIndex: 200,
           background: 'rgba(0,0,0,0.65)',
           backdropFilter: 'blur(3px)',
           pointerEvents: drawerOpen ? 'auto' : 'none',
@@ -116,10 +127,11 @@ export function LessonPanel() {
 
       {/* ─── Drawer móvil ─── */}
       <div
-        className="fixed top-0 left-0 h-full z-50 md:hidden flex flex-col"
+        className="fixed top-0 left-0 h-full md:hidden flex flex-col"
         style={{
+          zIndex: 201,
           width: 280,
-          background: 'var(--bg)',
+          background: '#0d0b08',
           borderRight: '1px solid var(--border)',
           transform: drawerOpen ? 'translateX(0)' : 'translateX(-100%)',
           transition: 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -150,7 +162,7 @@ export function LessonPanel() {
               <button key={l} onClick={() => handleLevel(l)}
                 className="flex-1 py-2 text-sm font-bold transition-all"
                 style={level === l
-                  ? { background: 'var(--amber)', color: 'var(--bg)', borderRadius: 3 }
+                  ? { background: 'var(--amber)', color: '#0d0b08', borderRadius: 3 }
                   : { border: '1px solid var(--border)', color: 'var(--muted)', borderRadius: 3 }
                 }>{l} · {LEVEL_LABELS[l]}</button>
             ))}
@@ -179,8 +191,8 @@ export function LessonPanel() {
         </nav>
       </div>
 
-      {/* ─── Navbar fixed ─── */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100, background: '#0d0b08', borderBottom: '1px solid var(--border)', transform: 'translateZ(0)' }}>
+      {/* ─── Navbar — plain flex item, never scrolls ─── */}
+      <div style={{ flexShrink: 0, background: '#0d0b08', borderBottom: '1px solid var(--border)' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
 
           {/* Logo */}
@@ -223,7 +235,7 @@ export function LessonPanel() {
             ))}
           </nav>
 
-          {/* Nivel — desktop / tab activo — móvil */}
+          {/* Nivel (desktop) / tab activo (móvil) */}
           <div className="flex items-center gap-3 shrink-0">
             <div className="hidden md:flex items-center gap-1 p-1"
               style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 3 }}>
@@ -231,7 +243,7 @@ export function LessonPanel() {
                 <button key={l} onClick={() => handleLevel(l)}
                   className="px-2.5 py-0.5 text-xs font-bold transition-all"
                   style={level === l
-                    ? { background: 'var(--amber)', color: 'var(--bg)', borderRadius: 2 }
+                    ? { background: 'var(--amber)', color: '#0d0b08', borderRadius: 2 }
                     : { color: 'var(--muted)' }
                   }>{l}</button>
               ))}
@@ -242,15 +254,16 @@ export function LessonPanel() {
         </div>
       </div>
 
-      {/* ─── Contenido ─── */}
-      <main className="flex-1 flex flex-col max-w-lg md:max-w-2xl mx-auto w-full" style={{ paddingTop: 56, position: 'relative', zIndex: 0, isolation: 'isolate' }}>
+      {/* ─── Área de scroll — todo el contenido aquí abajo ─── */}
+      <div style={{ flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
+        <main className="max-w-lg md:max-w-2xl mx-auto w-full">
 
-        {tab === 'lesson' && (
-          <div key="lesson" className="flex flex-col flex-1 fade-up">
-            <div style={{ borderBottom: '1px solid var(--border)' }}>
-              <ToggleBar toggles={toggles} onChange={handleToggle} />
-            </div>
-            <div className="flex-1">
+          {tab === 'lesson' && (
+            <div key="lesson" className="flex flex-col fade-up">
+              <div style={{ borderBottom: '1px solid var(--border)' }}>
+                <ToggleBar toggles={toggles} onChange={handleToggle} />
+              </div>
+
               {loading && (
                 <div className="flex flex-col items-center justify-center gap-5 py-32">
                   <span className="jp font-black kanji-pulse select-none" style={{ fontSize: '5rem', color: 'var(--text)', lineHeight: 1 }}>言</span>
@@ -264,7 +277,7 @@ export function LessonPanel() {
                 <div className="fade-up">
                   <div className="px-5 pt-6 flex items-center gap-3 slide-right">
                     <span className="shrink-0 text-[9px] tracking-[0.25em] uppercase font-semibold px-2 py-0.5"
-                      style={{ color: 'var(--bg)', background: 'var(--muted)', borderRadius: 2 }}>
+                      style={{ color: '#0d0b08', background: 'var(--muted)', borderRadius: 2 }}>
                       {level} · {LEVEL_LABELS[level]}
                     </span>
                     <p className="text-xs italic leading-snug" style={{ color: 'var(--muted)' }}>{dialogue.contexto_escena}</p>
@@ -302,39 +315,41 @@ export function LessonPanel() {
                   </div>
                 </div>
               )}
+
+              <button onClick={fetchDialogue} disabled={loading}
+                className="group flex items-center justify-between w-full px-5 py-4 transition-colors border-pulse"
+                style={{ borderTop: '1px solid var(--border)', color: 'var(--muted)' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
+              >
+                <span className="text-[11px] tracking-[0.2em] uppercase">{loading ? 'Cargando...' : 'Ver otra frase'}</span>
+                <span className="text-base group-hover:translate-x-1 transition-transform inline-block">→</span>
+              </button>
             </div>
-            <button onClick={fetchDialogue} disabled={loading}
-              className="group flex items-center justify-between w-full px-5 py-4 transition-colors border-pulse"
-              style={{ borderTop: '1px solid var(--border)', color: 'var(--muted)' }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
-            >
-              <span className="text-[11px] tracking-[0.2em] uppercase">{loading ? 'Cargando...' : 'Ver otra frase'}</span>
-              <span className="text-base group-hover:translate-x-1 transition-transform inline-block">→</span>
-            </button>
-          </div>
-        )}
+          )}
 
-        {tab === 'situaciones' && (
-          <div key="situaciones" className="fade-up">
-            <SituacionSelector />
-          </div>
-        )}
-
-        {tab === 'cards' && (
-          <div key="cards" className="fade-up">
-            <FlashcardDeck />
-          </div>
-        )}
-
-        {tab === 'stroke' && (
-          <div key="stroke" className="p-5 fade-up">
-            <div className="p-5" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 4 }}>
-              <StrokeAnimator />
+          {tab === 'situaciones' && (
+            <div key="situaciones" className="fade-up">
+              <SituacionSelector />
             </div>
-          </div>
-        )}
-      </main>
+          )}
+
+          {tab === 'cards' && (
+            <div key="cards" className="fade-up">
+              <FlashcardDeck />
+            </div>
+          )}
+
+          {tab === 'stroke' && (
+            <div key="stroke" className="p-5 fade-up">
+              <div className="p-5" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 4 }}>
+                <StrokeAnimator />
+              </div>
+            </div>
+          )}
+
+        </main>
+      </div>
     </div>
   )
 }
