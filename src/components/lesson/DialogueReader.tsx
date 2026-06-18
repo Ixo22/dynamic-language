@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { DialogueResponse, Token, VocabItem } from '@/lib/types'
 import { WordPopup } from './WordPopup'
 import { AudioPlayer } from './AudioPlayer'
@@ -77,14 +77,16 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
   const tokens      = tokenize(dialogue.frase_completa_jp, dialogue.vocabulario_desglosado)
   const ambientChar = dialogue.frase_completa_jp[0] ?? '語'
 
-  const shuffledVocab = useMemo(() => {
+  const shuffleRef = useRef<{ key: typeof dialogue; arr: typeof dialogue.vocabulario_desglosado } | null>(null)
+  if (!shuffleRef.current || shuffleRef.current.key !== dialogue) {
     const arr = [...dialogue.vocabulario_desglosado]
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]]
     }
-    return arr
-  }, [dialogue])
+    shuffleRef.current = { key: dialogue, arr }
+  }
+  const shuffledVocab = shuffleRef.current.arr
 
   useEffect(() => {
     if (activeIdx === null) return
