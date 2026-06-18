@@ -147,7 +147,7 @@ body::after {
 }
 @media (min-width: 768px) {
   .togglebar-sticky {
-    position: static;
+    display: none;
   }
 }
 
