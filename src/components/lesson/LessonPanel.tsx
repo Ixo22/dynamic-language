@@ -180,7 +180,7 @@ export function LessonPanel() {
       </div>
 
       {/* ─── Navbar sticky ─── */}
-      <div className="sticky top-0 z-30" style={{ background: 'var(--bg)', borderBottom: '1px solid var(--border)' }}>
+      <div className="sticky top-0" style={{ zIndex: 100, background: 'var(--bg)', borderBottom: '1px solid var(--border)' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
 
           {/* Logo */}
@@ -243,7 +243,7 @@ export function LessonPanel() {
       </div>
 
       {/* ─── Contenido ─── */}
-      <main className="flex-1 flex flex-col max-w-lg mx-auto w-full">
+      <main className="flex-1 flex flex-col max-w-lg mx-auto w-full" style={{ position: 'relative', zIndex: 0, isolation: 'isolate' }}>
 
         {tab === 'lesson' && (
           <div key="lesson" className="flex flex-col flex-1 fade-up">
