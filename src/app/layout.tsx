@@ -1,23 +1,30 @@
 import type { Metadata } from 'next'
-import { Noto_Sans_JP } from 'next/font/google'
+import { Noto_Sans_JP, Space_Grotesk } from 'next/font/google'
 import './globals.css'
 
-const notoSansJP = Noto_Sans_JP({
+const jp = Noto_Sans_JP({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
-  variable: '--font-noto-jp',
+  variable: '--font-jp',
+  display: 'swap',
+})
+
+const latin = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-latin',
   display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: '動的言語 — Aprende japonés real',
-  description: 'Aprende japonés con Input Comprensible y Repetición Espaciada',
+  title: '動的言語 — Japonés real',
+  description: 'Aprende japonés con input comprensible y repetición espaciada',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ja" className={`${notoSansJP.variable} h-full`}>
-      <body className="min-h-full bg-[#080810] text-slate-200 antialiased">
+    <html lang="ja" className={`${jp.variable} ${latin.variable} h-full`}>
+      <body className="min-h-full antialiased">
         {children}
       </body>
     </html>

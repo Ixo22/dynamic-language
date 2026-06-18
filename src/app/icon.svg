@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Fondo oscuro -->
+  <rect width="32" height="32" rx="5" fill="#0d0b08"/>
+  <!-- Burbuja de texto (aprendo idiomas) -->
+  <rect x="3" y="3" width="23" height="17" rx="3.5" fill="#c47d17"/>
+  <!-- Cola de la burbuja -->
+  <polygon points="6,20 4,28 15,20" fill="#c47d17"/>
+  <!-- Tres puntos que evocan "estoy aprendiendo a hablar" -->
+  <circle cx="9.5"  cy="11.5" r="2" fill="#0d0b08"/>
+  <circle cx="14.5" cy="11.5" r="2" fill="#0d0b08"/>
+  <circle cx="19.5" cy="11.5" r="2" fill="#0d0b08"/>
+</svg>

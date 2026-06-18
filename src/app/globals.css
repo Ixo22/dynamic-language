@@ -1,20 +1,67 @@
 @import "tailwindcss";
 
 :root {
-  --background: #080810;
-  --foreground: #e2e8f0;
+  --bg:      #0d0b08;
+  --surface: #161310;
+  --border:  #272010;
+  --text:    #e8dbc5;
+  --muted:   #5a5040;
+  --amber:   #c47d17;
+  --amber-l: #e8a832;
+  --red:     #9e3222;
+  --font-ui: var(--font-latin), 'Space Grotesk', system-ui, sans-serif;
+  --font-jp: var(--font-jp), 'Noto Sans JP', sans-serif;
 }
+
+* { -webkit-tap-highlight-color: transparent; }
+
+html { background: var(--bg); }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
 }
 
-* {
-  -webkit-tap-highlight-color: transparent;
+::selection { background: #c47d1728; color: var(--text); }
+
+::-webkit-scrollbar       { width: 2px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); }
+
+/* Grain de papel — sutil */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px;
 }
 
-::selection {
-  background: #7c3aed40;
-  color: #e2e8f0;
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.3); }
+  50%       { transform: scaleY(1); }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.018; transform: scale(1); }
+  50%       { opacity: 0.028; transform: scale(1.03); }
+}
+
+@keyframes kanji-pulse {
+  0%, 100% { opacity: 0.12; }
+  50%       { opacity: 0.35; }
+}
+
+.fade-up     { animation: fade-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.breathe     { animation: breathe 5s ease-in-out infinite; }
+.kanji-pulse { animation: kanji-pulse 1.8s ease-in-out infinite; }
+.jp          { font-family: var(--font-jp); }
