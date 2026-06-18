@@ -4,8 +4,9 @@ import { useState } from 'react'
 import { VocabItem } from '@/lib/types'
 
 interface Props {
-  vocab:   VocabItem
-  onClose: () => void
+  vocab:     VocabItem
+  onClose:   () => void
+  showAudio: boolean
 }
 
 function speakWord(text: string, onStart: () => void, onEnd: () => void) {
@@ -19,7 +20,7 @@ function speakWord(text: string, onStart: () => void, onEnd: () => void) {
   window.speechSynthesis.speak(u)
 }
 
-export function WordPopup({ vocab, onClose }: Props) {
+export function WordPopup({ vocab, onClose, showAudio }: Props) {
   const [playing, setPlaying] = useState(false)
 
   function handlePlay(e: React.MouseEvent) {
@@ -39,17 +40,19 @@ export function WordPopup({ vocab, onClose }: Props) {
             <p className="jp font-bold text-2xl leading-none truncate" style={{ color: 'var(--amber)' }}>{vocab.forma}</p>
             <p className="jp text-[10px] mt-0.5 tracking-widest" style={{ color: 'var(--muted)' }}>{vocab.lectura}</p>
           </div>
-          <button
-            onClick={handlePlay}
-            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full transition-colors"
-            style={{
-              border: '1px solid', borderColor: playing ? 'var(--amber)' : 'var(--border)',
-              background: playing ? 'rgba(196,125,23,0.15)' : 'transparent',
-              color: playing ? 'var(--amber)' : 'var(--muted)',
-            }}
-          >
-            {playing ? <span className="w-2 h-2 rounded-sm" style={{ background: 'var(--amber)' }} /> : <span style={{ fontSize: 10, marginLeft: 1 }}>▶</span>}
-          </button>
+          {showAudio && (
+            <button
+              onClick={handlePlay}
+              className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+              style={{
+                border: '1px solid', borderColor: playing ? 'var(--amber)' : 'var(--border)',
+                background: playing ? 'rgba(196,125,23,0.15)' : 'transparent',
+                color: playing ? 'var(--amber)' : 'var(--muted)',
+              }}
+            >
+              {playing ? <span className="w-2 h-2 rounded-sm" style={{ background: 'var(--amber)' }} /> : <span style={{ fontSize: 10, marginLeft: 1 }}>▶</span>}
+            </button>
+          )}
         </div>
         <div className="px-4 py-2.5">
           <p className="text-sm" style={{ color: 'var(--text)' }}>{vocab.significado}</p>
