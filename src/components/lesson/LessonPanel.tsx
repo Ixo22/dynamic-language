@@ -319,7 +319,7 @@ export function LessonPanel() {
                 </div>
               )}
 
-              <button onClick={fetchDialogue} disabled={loading}
+              <button onClick={() => fetchDialogue()} disabled={loading}
                 className="group flex items-center justify-between w-full px-5 py-4 transition-colors border-pulse"
                 style={{ borderTop: '1px solid var(--border)', color: 'var(--muted)' }}
                 onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
