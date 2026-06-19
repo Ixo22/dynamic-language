@@ -95,7 +95,7 @@ export function LessonPanel() {
   function handleLevel(l: JLPTLevel) {
     setLevel(l)
     try { localStorage.setItem(LEVEL_KEY, l) } catch {}
-    handleNextPhrase(l)
+    fetchDialogue(l)
   }
 
   function switchTab(t: Tab) {
