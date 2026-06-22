@@ -19,6 +19,13 @@ create table if not exists public.srs_progress (
   unique (user_id, japanese_phrase)
 );
 
+create table if not exists public.forgotten_vocab (
+  user_id    uuid not null references public.users(id) on delete cascade,
+  forma      text not null,
+  created_at timestamptz not null default now(),
+  primary key (user_id, forma)
+);
+
 -- Row Level Security
 alter table public.users enable row level security;
 alter table public.srs_progress enable row level security;
@@ -27,6 +34,11 @@ create policy "Users can manage own data" on public.users
   for all using (auth.uid() = id);
 
 create policy "Users can manage own SRS" on public.srs_progress
+  for all using (auth.uid() = user_id);
+
+alter table public.forgotten_vocab enable row level security;
+
+create policy "Users can manage own forgotten vocab" on public.forgotten_vocab
   for all using (auth.uid() = user_id);
 
 -- Auto-crear perfil al registrarse

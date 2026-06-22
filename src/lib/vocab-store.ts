@@ -11,14 +11,58 @@ export interface VocabSRS {
   next_review:   string
 }
 
-const VOCAB_KEY = 'dl_vocab_seen'
-const SRS_KEY   = 'dl_vocab_srs'
+const VOCAB_KEY     = 'dl_vocab_seen'
+const SRS_KEY       = 'dl_vocab_srs'
+const FORGOTTEN_KEY = 'dl_vocab_forgotten'
 
-export function addVocab(items: { forma: string; lectura: string; significado: string }[], level?: string): void {
+function getForgottenFormas(): Set<string> {
+  if (typeof window === 'undefined') return new Set()
+  try {
+    return new Set(JSON.parse(localStorage.getItem(FORGOTTEN_KEY) ?? '[]'))
+  } catch { return new Set() }
+}
+
+export function syncForgottenFromDB(): void {
+  fetch('/api/vocab/forget')
+    .then(r => r.json())
+    .then(({ forgotten }: { forgotten: string[] }) => {
+      if (!Array.isArray(forgotten)) return
+      const existing = getForgottenFormas()
+      forgotten.forEach(f => existing.add(f))
+      localStorage.setItem(FORGOTTEN_KEY, JSON.stringify([...existing]))
+    })
+    .catch(() => {})
+}
+
+export function addVocab(
+  items: { forma: string; lectura: string; significado: string }[],
+  level?: string,
+  fromLesson = false
+): void {
   if (typeof window === 'undefined') return
   try {
+    const forgotten = getForgottenFormas()
+    const toUnforget: string[] = []
     const map = new Map(getVocab().map(v => [v.forma, v]))
-    items.forEach(v => map.set(v.forma, { ...v, ...(level ? { level } : {}) }))
+    items.forEach(v => {
+      if (fromLesson || !forgotten.has(v.forma)) {
+        map.set(v.forma, { ...v, ...(level ? { level } : {}) })
+        if (fromLesson && forgotten.has(v.forma)) {
+          forgotten.delete(v.forma)
+          toUnforget.push(v.forma)
+        }
+      }
+    })
+    if (toUnforget.length > 0) {
+      localStorage.setItem(FORGOTTEN_KEY, JSON.stringify([...forgotten]))
+      toUnforget.forEach(forma => {
+        fetch('/api/vocab/forget', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ forma }),
+        }).catch(() => {})
+      })
+    }
     localStorage.setItem(VOCAB_KEY, JSON.stringify([...map.values()]))
   } catch {}
 }
@@ -30,7 +74,15 @@ export function removeVocab(forma: string): void {
     const srs = getVocabSRS()
     delete srs[forma]
     localStorage.setItem(SRS_KEY, JSON.stringify(srs))
+    const forgotten = getForgottenFormas()
+    forgotten.add(forma)
+    localStorage.setItem(FORGOTTEN_KEY, JSON.stringify([...forgotten]))
   } catch {}
+  fetch('/api/vocab/forget', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ forma }),
+  }).catch(() => {})
 }
 
 export function getVocab(): StoredVocab[] {

@@ -9,7 +9,7 @@ import { InputPractice } from './InputPractice'
 import { StrokeAnimator } from '@/components/stroke/StrokeAnimator'
 import { FlashcardDeck } from '@/components/flashcards/FlashcardDeck'
 import { SituacionSelector } from '@/components/situaciones/SituacionSelector'
-import { addVocab } from '@/lib/vocab-store'
+import { addVocab, syncForgottenFromDB } from '@/lib/vocab-store'
 
 const TOGGLES_KEY = 'dl_toggles'
 const LEVEL_KEY   = 'dl_level'
@@ -74,10 +74,10 @@ export function LessonPanel() {
     }
   }, [level])
 
-  useEffect(() => { fetchDialogue() }, [])
+  useEffect(() => { syncForgottenFromDB(); fetchDialogue() }, [])
 
   function handleNextPhrase(levelOverride?: JLPTLevel) {
-    if (dialogue) addVocab(dialogue.vocabulario_desglosado, levelOverride ?? level)
+    if (dialogue) addVocab(dialogue.vocabulario_desglosado, levelOverride ?? level, true)
     fetchDialogue(levelOverride)
   }
 
