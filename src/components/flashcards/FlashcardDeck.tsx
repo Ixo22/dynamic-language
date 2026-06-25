@@ -133,6 +133,7 @@ function FlashCard({ card, slideDir, onResult, onDelete, onSwipeLeft, onSwipeRig
           transition: isDragging ? 'none' : 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.38s ease',
           opacity: Math.max(0.15, 1 - Math.abs(dragX) / 320),
           willChange: isDragging ? 'transform' : 'auto',
+          touchAction: 'pan-y',
         }}
         onClick={handleClick}
         onMouseMove={handleMouseMove}
