@@ -48,12 +48,14 @@ function FlashCard({ card, slideDir, onResult, onDelete, onSwipeLeft, onSwipeRig
   onSwipeLeft:  () => void
   onSwipeRight: () => void
 }) {
-  const [flipped, setFlipped]   = useState(false)
-  const [tilt, setTilt]         = useState({ x: 0, y: 0 })
-  const [playing, setPlaying]   = useState(false)
-  const containerRef             = useRef<HTMLDivElement>(null)
-  const touchStartX              = useRef(0)
-  const didSwipe                 = useRef(false)
+  const [flipped, setFlipped]     = useState(false)
+  const [tilt, setTilt]           = useState({ x: 0, y: 0 })
+  const [playing, setPlaying]     = useState(false)
+  const [dragX, setDragX]         = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const containerRef               = useRef<HTMLDivElement>(null)
+  const touchStartX                = useRef(0)
+  const didSwipe                   = useRef(false)
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     if (flipped || !containerRef.current) return
@@ -67,12 +69,27 @@ function FlashCard({ card, slideDir, onResult, onDelete, onSwipeLeft, onSwipeRig
   function handleTouchStart(e: React.TouchEvent) {
     touchStartX.current = e.touches[0].clientX
     didSwipe.current = false
+    setIsDragging(true)
+  }
+
+  function handleTouchMove(e: React.TouchEvent) {
+    const delta = e.touches[0].clientX - touchStartX.current
+    setDragX(delta)
   }
 
   function handleTouchEnd(e: React.TouchEvent) {
+    setIsDragging(false)
     const delta = e.changedTouches[0].clientX - touchStartX.current
-    if (delta < -50) { didSwipe.current = true; onSwipeLeft() }
-    else if (delta > 50) { didSwipe.current = true; onSwipeRight() }
+    if (Math.abs(delta) > 80) {
+      didSwipe.current = true
+      setDragX(delta > 0 ? 600 : -600)
+      setTimeout(() => {
+        if (delta < 0) onSwipeLeft()
+        else onSwipeRight()
+      }, 280)
+    } else {
+      setDragX(0)
+    }
   }
 
   function handleClick() {
@@ -109,11 +126,19 @@ function FlashCard({ card, slideDir, onResult, onDelete, onSwipeLeft, onSwipeRig
       <div
         ref={containerRef}
         className={`w-full max-w-sm cursor-pointer select-none ${SLIDE_CLASS[slideDir]}`}
-        style={{ perspective: '1000px', height: 240 }}
+        style={{
+          perspective: '1000px',
+          height: 240,
+          transform: `translateX(${dragX}px) rotate(${dragX * 0.035}deg)`,
+          transition: isDragging ? 'none' : 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.38s ease',
+          opacity: Math.max(0.15, 1 - Math.abs(dragX) / 320),
+          willChange: isDragging ? 'transform' : 'auto',
+        }}
         onClick={handleClick}
         onMouseMove={handleMouseMove}
         onMouseLeave={() => setTilt({ x: 0, y: 0 })}
         onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
         <div style={{
