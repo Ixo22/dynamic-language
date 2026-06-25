@@ -217,7 +217,7 @@ export function DialogueReader({ dialogue, showHints, showText, showAudio }: Pro
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <div className="shrink-0">
-                    <VocabAudioBtn forma={v.forma} visible={showAudio} />
+                    <VocabAudioBtn forma={v.lectura} visible={showAudio} />
                   </div>
                 </div>
 

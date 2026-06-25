@@ -49,6 +49,7 @@ function AudioBtn({ forma }: { forma: string }) {
 
 function CardContent({ vocab, text, onClose, showAudio }: Props) {
   const displayText = vocab?.forma ?? text
+  const audioText   = vocab?.lectura ?? text
   return (
     <div
       className="scale-in"
@@ -67,7 +68,7 @@ function CardContent({ vocab, text, onClose, showAudio }: Props) {
           {vocab && <p className="jp text-sm mt-1 tracking-widest" style={{ color: 'var(--muted)' }}>{vocab.lectura}</p>}
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
-          {showAudio && <AudioBtn forma={displayText} />}
+          {showAudio && <AudioBtn forma={audioText} />}
           <button
             onClick={e => { e.stopPropagation(); onClose() }}
             className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
