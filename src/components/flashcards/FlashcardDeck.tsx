@@ -3,6 +3,16 @@
 import { useState, useEffect, useRef } from 'react'
 import { getVocab, getVocabSRS, updateVocabSRS, removeVocab, StoredVocab, VocabSRS } from '@/lib/vocab-store'
 
+function speakWord(text: string) {
+  if (!window.speechSynthesis) return
+  window.speechSynthesis.cancel()
+  const u = new SpeechSynthesisUtterance(text)
+  u.lang = 'ja-JP'; u.rate = 0.8; u.pitch = 1.1
+  const voice = window.speechSynthesis.getVoices().find(v => v.lang.startsWith('ja'))
+  if (voice) u.voice = voice
+  window.speechSynthesis.speak(u)
+}
+
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr]
   for (let i = a.length - 1; i > 0; i--) {
@@ -30,15 +40,20 @@ const SLIDE_CLASS: Record<SlideDir, string> = {
 }
 
 /* ── Tarjeta individual con flip 3D y tilt por ratón ── */
-function FlashCard({ card, slideDir, onResult, onDelete }: {
-  card:     StoredVocab
-  slideDir: SlideDir
-  onResult: (remembered: boolean) => void
-  onDelete: () => void
+function FlashCard({ card, slideDir, onResult, onDelete, onSwipeLeft, onSwipeRight }: {
+  card:         StoredVocab
+  slideDir:     SlideDir
+  onResult:     (remembered: boolean) => void
+  onDelete:     () => void
+  onSwipeLeft:  () => void
+  onSwipeRight: () => void
 }) {
-  const [flipped, setFlipped] = useState(false)
-  const [tilt, setTilt]       = useState({ x: 0, y: 0 })
-  const containerRef          = useRef<HTMLDivElement>(null)
+  const [flipped, setFlipped]   = useState(false)
+  const [tilt, setTilt]         = useState({ x: 0, y: 0 })
+  const [playing, setPlaying]   = useState(false)
+  const containerRef             = useRef<HTMLDivElement>(null)
+  const touchStartX              = useRef(0)
+  const didSwipe                 = useRef(false)
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     if (flipped || !containerRef.current) return
@@ -47,6 +62,34 @@ function FlashCard({ card, slideDir, onResult, onDelete }: {
       x:  ((e.clientY - (rect.top  + rect.height / 2)) / (rect.height / 2)) * 7,
       y: -((e.clientX - (rect.left + rect.width  / 2)) / (rect.width  / 2)) * 7,
     })
+  }
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX
+    didSwipe.current = false
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    const delta = e.changedTouches[0].clientX - touchStartX.current
+    if (delta < -50) { didSwipe.current = true; onSwipeLeft() }
+    else if (delta > 50) { didSwipe.current = true; onSwipeRight() }
+  }
+
+  function handleClick() {
+    if (didSwipe.current) { didSwipe.current = false; return }
+    setFlipped(f => !f)
+    setTilt({ x: 0, y: 0 })
+  }
+
+  function handleAudio(e: React.MouseEvent) {
+    e.stopPropagation()
+    if (playing) { window.speechSynthesis?.cancel(); setPlaying(false); return }
+    setPlaying(true)
+    speakWord(card.lectura)
+    const u = window.speechSynthesis
+    const check = setInterval(() => {
+      if (!u.speaking) { setPlaying(false); clearInterval(check) }
+    }, 100)
   }
 
   const isTilting = tilt.x !== 0 || tilt.y !== 0
@@ -67,9 +110,11 @@ function FlashCard({ card, slideDir, onResult, onDelete }: {
         ref={containerRef}
         className={`w-full max-w-sm cursor-pointer select-none ${SLIDE_CLASS[slideDir]}`}
         style={{ perspective: '1000px', height: 240 }}
-        onClick={() => { setFlipped(f => !f); setTilt({ x: 0, y: 0 }) }}
+        onClick={handleClick}
         onMouseMove={handleMouseMove}
         onMouseLeave={() => setTilt({ x: 0, y: 0 })}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
         <div style={{
           position: 'relative', width: '100%', height: '100%',
@@ -95,6 +140,22 @@ function FlashCard({ card, slideDir, onResult, onDelete }: {
               {card.forma}
             </p>
             <p className="jp tracking-widest" style={{ fontSize: 13, color: 'var(--muted)' }}>{card.lectura}</p>
+            <button
+              onClick={handleAudio}
+              className="flex items-center justify-center rounded-full transition-all"
+              style={{
+                width: 36, height: 36,
+                border: '1px solid',
+                borderColor: playing ? 'var(--amber)' : 'var(--border)',
+                background: playing ? 'rgba(196,125,23,0.15)' : 'transparent',
+                color: playing ? 'var(--amber)' : 'var(--muted)',
+              }}
+            >
+              {playing
+                ? <span className="block rounded-sm" style={{ width: 8, height: 8, background: 'var(--amber)' }} />
+                : <span style={{ fontSize: 11, marginLeft: 2 }}>▶</span>
+              }
+            </button>
             <p className="text-[8px] tracking-[0.25em] uppercase absolute bottom-4"
               style={{ color: 'var(--muted)', opacity: 0.4 }}>
               Pulsa para revelar
@@ -255,7 +316,7 @@ export function FlashcardDeck() {
       )}
 
       {/* Tarjeta — key fuerza remount al cambiar → flipped siempre empieza en false */}
-      <FlashCard key={cardKey} card={deck[idx]} slideDir={slideDir} onResult={handleResult} onDelete={handleDelete} />
+      <FlashCard key={cardKey} card={deck[idx]} slideDir={slideDir} onResult={handleResult} onDelete={handleDelete} onSwipeLeft={goPrev} onSwipeRight={goNext} />
 
       {/* Navegación manual */}
       <div className="flex items-center justify-between w-full max-w-sm pt-1">
