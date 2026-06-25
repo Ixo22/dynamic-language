@@ -123,12 +123,10 @@ function FlashCard({ card, slideDir, onResult, onDelete, onSwipeLeft, onSwipeRig
   return (
     <>
       {/* ── Carta 3D ── */}
+      {/* Outer: drag transform — separado de la animación CSS para no interferir */}
       <div
-        ref={containerRef}
-        className={`w-full max-w-sm cursor-pointer select-none ${SLIDE_CLASS[slideDir]}`}
+        className="w-full max-w-sm cursor-pointer select-none"
         style={{
-          perspective: '1000px',
-          height: 240,
           transform: `translateX(${dragX}px) rotate(${dragX * 0.035}deg)`,
           transition: isDragging ? 'none' : 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.38s ease',
           opacity: Math.max(0.15, 1 - Math.abs(dragX) / 320),
@@ -141,6 +139,12 @@ function FlashCard({ card, slideDir, onResult, onDelete, onSwipeLeft, onSwipeRig
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+      >
+      {/* Inner: animación de entrada + perspectiva 3D */}
+      <div
+        ref={containerRef}
+        className={SLIDE_CLASS[slideDir]}
+        style={{ perspective: '1000px', height: 240 }}
       >
         <div style={{
           position: 'relative', width: '100%', height: '100%',
@@ -213,6 +217,7 @@ function FlashCard({ card, slideDir, onResult, onDelete, onSwipeLeft, onSwipeRig
             </p>
           </div>
         </div>
+      </div>
       </div>
 
       {/* ── Botones SRS — aparecen al revelar ── */}
