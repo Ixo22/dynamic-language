@@ -54,8 +54,27 @@ function FlashCard({ card, slideDir, onResult, onDelete, onSwipeLeft, onSwipeRig
   const [dragX, setDragX]         = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const containerRef               = useRef<HTMLDivElement>(null)
+  const wrapperRef                 = useRef<HTMLDivElement>(null)
   const touchStartX                = useRef(0)
+  const touchStartY                = useRef(0)
+  const gestureDir                 = useRef<'h' | 'v' | null>(null)
   const didSwipe                   = useRef(false)
+
+  // Listener nativo no-pasivo para poder bloquear el scroll vertical durante swipe horizontal
+  useEffect(() => {
+    const el = wrapperRef.current
+    if (!el) return
+    const onMove = (e: TouchEvent) => {
+      const dx = Math.abs(e.touches[0].clientX - touchStartX.current)
+      const dy = Math.abs(e.touches[0].clientY - touchStartY.current)
+      if (!gestureDir.current && (dx > 5 || dy > 5)) {
+        gestureDir.current = dx > dy ? 'h' : 'v'
+      }
+      if (gestureDir.current === 'h') e.preventDefault()
+    }
+    el.addEventListener('touchmove', onMove, { passive: false })
+    return () => el.removeEventListener('touchmove', onMove)
+  }, [])
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     if (flipped || !containerRef.current) return
@@ -68,11 +87,14 @@ function FlashCard({ card, slideDir, onResult, onDelete, onSwipeLeft, onSwipeRig
 
   function handleTouchStart(e: React.TouchEvent) {
     touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+    gestureDir.current = null
     didSwipe.current = false
     setIsDragging(true)
   }
 
   function handleTouchMove(e: React.TouchEvent) {
+    if (gestureDir.current !== 'h') return
     const delta = e.touches[0].clientX - touchStartX.current
     setDragX(delta)
   }
@@ -80,7 +102,7 @@ function FlashCard({ card, slideDir, onResult, onDelete, onSwipeLeft, onSwipeRig
   function handleTouchEnd(e: React.TouchEvent) {
     setIsDragging(false)
     const delta = e.changedTouches[0].clientX - touchStartX.current
-    if (Math.abs(delta) > 80) {
+    if (gestureDir.current === 'h' && Math.abs(delta) > 80) {
       didSwipe.current = true
       setDragX(delta > 0 ? 600 : -600)
       setTimeout(() => {
@@ -125,13 +147,13 @@ function FlashCard({ card, slideDir, onResult, onDelete, onSwipeLeft, onSwipeRig
       {/* ── Carta 3D ── */}
       {/* Outer: drag transform — separado de la animación CSS para no interferir */}
       <div
+        ref={wrapperRef}
         className="w-full max-w-sm cursor-pointer select-none"
         style={{
           transform: `translateX(${dragX}px) rotate(${dragX * 0.035}deg)`,
           transition: isDragging ? 'none' : 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.38s ease',
           opacity: Math.max(0.15, 1 - Math.abs(dragX) / 320),
           willChange: isDragging ? 'transform' : 'auto',
-          touchAction: 'pan-y',
         }}
         onClick={handleClick}
         onMouseMove={handleMouseMove}
