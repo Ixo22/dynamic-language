@@ -146,7 +146,7 @@ export function WordPopup({ vocab, text, onClose, showAudio }: Props) {
       onClick={e => e.stopPropagation()}
     >
       <div className="pointer-events-auto">
-        <CardContent vocab={vocab} onClose={onClose} showAudio={showAudio} />
+        <CardContent vocab={vocab} text={text} onClose={onClose} showAudio={showAudio} />
       </div>
       <div className="flex justify-center mt-px pointer-events-none">
         <div className="w-0 h-0" style={{
