@@ -5,7 +5,8 @@ import { createPortal } from 'react-dom'
 import { VocabItem } from '@/lib/types'
 
 interface Props {
-  vocab:     VocabItem
+  vocab:     VocabItem | null
+  text:      string
   onClose:   () => void
   showAudio: boolean
 }
@@ -46,7 +47,8 @@ function AudioBtn({ forma }: { forma: string }) {
   )
 }
 
-function CardContent({ vocab, onClose, showAudio }: Props) {
+function CardContent({ vocab, text, onClose, showAudio }: Props) {
+  const displayText = vocab?.forma ?? text
   return (
     <div
       className="scale-in"
@@ -61,11 +63,11 @@ function CardContent({ vocab, onClose, showAudio }: Props) {
     >
       <div className="px-4 py-3 flex items-center justify-between gap-2" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="min-w-0">
-          <p className="jp font-bold leading-none" style={{ fontSize: '2rem', color: 'var(--amber)' }}>{vocab.forma}</p>
-          <p className="jp text-sm mt-1 tracking-widest" style={{ color: 'var(--muted)' }}>{vocab.lectura}</p>
+          <p className="jp font-bold leading-none" style={{ fontSize: '2rem', color: 'var(--amber)' }}>{displayText}</p>
+          {vocab && <p className="jp text-sm mt-1 tracking-widest" style={{ color: 'var(--muted)' }}>{vocab.lectura}</p>}
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
-          {showAudio && <AudioBtn forma={vocab.forma} />}
+          {showAudio && <AudioBtn forma={displayText} />}
           <button
             onClick={e => { e.stopPropagation(); onClose() }}
             className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
@@ -75,14 +77,16 @@ function CardContent({ vocab, onClose, showAudio }: Props) {
           >✕</button>
         </div>
       </div>
-      <div className="px-4 py-3">
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--text)' }}>{vocab.significado}</p>
-      </div>
+      {vocab && (
+        <div className="px-4 py-3">
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--text)' }}>{vocab.significado}</p>
+        </div>
+      )}
     </div>
   )
 }
 
-export function WordPopup({ vocab, onClose, showAudio }: Props) {
+export function WordPopup({ vocab, text, onClose, showAudio }: Props) {
   const isMobile    = typeof window !== 'undefined' && window.innerWidth < 768
   const touchStartY = useRef(0)
   const [dragY, setDragY]         = useState(0)
@@ -127,7 +131,7 @@ export function WordPopup({ vocab, onClose, showAudio }: Props) {
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
         >
-          <CardContent vocab={vocab} onClose={onClose} showAudio={showAudio} />
+          <CardContent vocab={vocab} text={text} onClose={onClose} showAudio={showAudio} />
         </div>
       </>,
       document.body

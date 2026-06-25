@@ -14,6 +14,16 @@ function shortMeaning(sig: string): string {
 
 interface Token { text: string; vocab: VocabItem | null; isVocab: boolean }
 
+function isJapaneseChar(ch: string): boolean {
+  const code = ch.charCodeAt(0)
+  return (
+    (code >= 0x3040 && code <= 0x309F) ||
+    (code >= 0x30A0 && code <= 0x30FF) ||
+    (code >= 0x4E00 && code <= 0x9FFF) ||
+    (code >= 0x3400 && code <= 0x4DBF)
+  )
+}
+
 function tokenize(phrase: string, vocab: VocabItem[]): Token[] {
   const tokens: Token[] = []
   let remaining = phrase
@@ -26,9 +36,17 @@ function tokenize(phrase: string, vocab: VocabItem[]): Token[] {
       }
     }
     if (!matched) {
-      const last = tokens[tokens.length - 1]
-      if (last && !last.isVocab) last.text += remaining[0]
-      else tokens.push({ text: remaining[0], vocab: null, isVocab: false })
+      const ch = remaining[0]
+      if (isJapaneseChar(ch)) {
+        tokens.push({ text: ch, vocab: null, isVocab: false })
+      } else {
+        const last = tokens[tokens.length - 1]
+        if (last && !last.isVocab && !isJapaneseChar(last.text[0])) {
+          last.text += ch
+        } else {
+          tokens.push({ text: ch, vocab: null, isVocab: false })
+        }
+      }
       remaining = remaining.slice(1)
     }
   }
@@ -70,32 +88,35 @@ function PhraseCard({ dialogue, index, showHints }: {
       {/* Frase */}
       <div className="px-4 py-3 relative" style={{ borderTop: '1px solid var(--border)' }}>
         <div className="flex flex-wrap gap-x-1 gap-y-4 items-end">
-          {tokens.map((token, i) => (
-            <div key={i} className="relative flex flex-col items-center" style={{ gap: token.isVocab ? 3 : 0 }}>
-              {showHints && token.vocab && (
-                <span className="jp text-[9px] leading-none" style={{ color: 'var(--amber)', opacity: 0.65 }}>
-                  {token.vocab.lectura}
-                </span>
-              )}
-              <button
-                onClick={e => { if (!token.isVocab) return; e.stopPropagation(); setActiveIdx(activeIdx === i ? null : i) }}
-                className={`jp leading-none ${token.isVocab ? 'token-btn' : ''}`}
-                style={{
-                  fontSize: 'clamp(1.6rem, 7vw, 2.4rem)',
-                  color: activeIdx === i ? 'var(--amber)' : 'var(--text)',
-                  opacity: token.isVocab ? 1 : 0.45,
-                  cursor: token.isVocab ? 'pointer' : 'default',
-                  fontWeight: token.isVocab ? 700 : 400,
-                  textDecorationLine: token.isVocab && activeIdx !== i ? 'underline' : 'none',
-                  textDecorationColor: 'rgba(196,125,23,0.3)',
-                  textUnderlineOffset: '5px',
-                }}
-              >{token.text}</button>
-              {activeIdx === i && token.vocab && (
-                <WordPopup vocab={token.vocab} onClose={() => setActiveIdx(null)} showAudio />
-              )}
-            </div>
-          ))}
+          {tokens.map((token, i) => {
+            const isClickable = token.isVocab || isJapaneseChar(token.text[0])
+            return (
+              <div key={i} className="relative flex flex-col items-center" style={{ gap: token.isVocab ? 3 : 0 }}>
+                {showHints && token.vocab && (
+                  <span className="jp text-[9px] leading-none" style={{ color: 'var(--amber)', opacity: 0.65 }}>
+                    {token.vocab.lectura}
+                  </span>
+                )}
+                <button
+                  onClick={e => { if (!isClickable) return; e.stopPropagation(); setActiveIdx(activeIdx === i ? null : i) }}
+                  className={`jp leading-none ${isClickable ? 'token-btn' : ''}`}
+                  style={{
+                    fontSize: 'clamp(1.6rem, 7vw, 2.4rem)',
+                    color: activeIdx === i ? 'var(--amber)' : 'var(--text)',
+                    opacity: isClickable ? 1 : 0.3,
+                    cursor: isClickable ? 'pointer' : 'default',
+                    fontWeight: token.isVocab ? 700 : (isClickable ? 500 : 400),
+                    textDecorationLine: token.isVocab && activeIdx !== i ? 'underline' : 'none',
+                    textDecorationColor: 'rgba(196,125,23,0.3)',
+                    textUnderlineOffset: '5px',
+                  }}
+                >{token.text}</button>
+                {activeIdx === i && isClickable && (
+                  <WordPopup vocab={token.vocab} text={token.text} onClose={() => setActiveIdx(null)} showAudio />
+                )}
+              </div>
+            )
+          })}
         </div>
         {/* Audio */}
         <div className="mt-3 flex items-center gap-3">
